@@ -1,0 +1,141 @@
+variable "create" {
+  description = "Determines whether resources will be created (affects all resources)"
+  type        = bool
+  default     = true
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# Lustre Filesystem
+################################################################################
+
+variable "create_lustre" {
+  description = "Determines whether a FSx for Lustre filesystem will be created"
+  type        = bool
+  default     = false
+}
+
+variable "backup_id" {
+  description = "The ID of the source backup to create the filesystem from"
+  type        = string
+  default     = null
+}
+
+variable "export_path" {
+  description = "S3 URI (with optional prefix) where the root of your Amazon FSx file system is exported"
+  type        = string
+  default     = null
+}
+
+variable "import_path" {
+  description = "S3 URI (with optional prefix) that you're using as the data repository for your FSx for Lustre file system"
+  type        = string
+  default     = null
+}
+
+variable "imported_file_chunk_size" {
+  description = "For files imported from a data repository, this value determines the stripe count and maximum amount of data per file (in MiB) stored on a single physical disk"
+  type        = number
+  default     = null
+}
+
+variable "security_group_ids" {
+  description = "A list of IDs for the security groups that apply to the specified network interfaces created for file system access. These security groups will apply to all network interfaces"
+  type        = list(string)
+  default     = []
+}
+
+variable "storage_capacity" {
+  description = "The storage capacity (GiB) of the file system. Minimum of `1200`"
+  type        = number
+  default     = null
+}
+
+variable "subnet_ids" {
+  description = "A list of IDs for the subnets that the file system will be accessible from. File systems currently support only one subnet. The file server is also launched in that subnet's Availability Zone"
+  type        = list(string)
+  default     = []
+}
+
+variable "weekly_maintenance_start_time" {
+  description = "The preferred start time (in d:HH:MM format) to perform weekly maintenance, in the UTC time zone"
+  type        = string
+  default     = null
+}
+
+variable "deployment_type" {
+  description = "The filesystem deployment type. One of: `SCRATCH_1`, `SCRATCH_2`, `PERSISTENT_1`, `PERSISTENT_2`"
+  type        = string
+  default     = null
+}
+
+variable "kms_key_id" {
+  description = "ARN for the KMS Key to encrypt the file system at rest, applicable for PERSISTENT_1 and PERSISTENT_2 deployment_type. Defaults to an AWS managed KMS Key"
+  type        = string
+  default     = null
+}
+
+variable "per_unit_storage_throughput" {
+  description = "Describes the amount of read and write throughput for each 1 tebibyte of storage, in MB/s/TiB, required for the `PERSISTENT_1` and `PERSISTENT_2` deployment_type"
+  type        = number
+  default     = null
+}
+
+variable "automatic_backup_retention_days" {
+  description = "The number of days to retain automatic backups. Setting this to 0 disables automatic backups. You can retain automatic backups for a maximum of 90 days. only valid for `PERSISTENT_1` and `PERSISTENT_2` deployment_type"
+  type        = number
+  default     = null
+}
+
+variable "daily_automatic_backup_start_time" {
+  description = "The preferred time to take daily automatic backups, in the UTC time zone."
+  type        = string
+  default     = null
+}
+
+variable "storage_type" {
+  description = "The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD`"
+  type        = string
+  default     = null
+}
+
+variable "drive_cache_type" {
+  description = "The type of drive cache used by `PERSISTENT_1` filesystems that are provisioned with `HDD` `storage_type`"
+  type        = string
+  default     = null
+}
+
+variable "auto_import_policy" {
+  description = "How Amazon FSx keeps your file and directory listings up to date as you add or modify objects in your linked S3 bucket"
+  type        = string
+  default     = null
+}
+
+variable "copy_tags_to_backups" {
+  description = "A boolean flag indicating whether tags for the file system should be copied to backups. Applicable for `PERSISTENT_1` and `PERSISTENT_2` deployment_type"
+  type        = bool
+  default     = false
+}
+
+variable "data_compression_type" {
+  description = "Sets the data compression configuration for the file system. Valid values are `LZ4` and `NONE`. Default value is `NONE`"
+  type        = string
+  default     = null
+}
+
+variable "file_system_type_version" {
+  description = "Sets the Lustre version for the file system that you're creating"
+  type        = string
+  default     = null
+}
+
+variable "log_configuration" {
+  description = "The configuration object for Amazon FSx for Lustre file systems used in the CreateFileSystem and CreateFileSystemFromBackup operations."
+  type        = map(string)
+  default     = {}
+}
