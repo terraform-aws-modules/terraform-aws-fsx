@@ -85,7 +85,7 @@ variable "backup_id" {
 }
 
 variable "copy_tags_to_backups" {
-  description = "A boolean flag indicating whether tags for the file system should be copied to backups. Applicable for `PERSISTENT_1` and `PERSISTENT_2` deployment_type"
+  description = "A boolean flag indicating whether tags for the file system should be copied to backups"
   type        = bool
   default     = false
 }
@@ -190,7 +190,41 @@ variable "route_table_ids" {
   default     = []
 }
 
-variable "throughput_capacity" {
+variable "ontap_throughput_capacity" {
+  description = "Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048`"
+  type        = number
+  default     = null
+}
+
+################################################################################
+# ONTAP File System
+################################################################################
+
+variable "create_openzfs" {
+  description = "Determines whether a FSx OpenZFS filesystem will be created"
+  type        = bool
+  default     = false
+}
+
+variable "copy_tags_to_volumes" {
+  description = "A boolean flag indicating whether tags for the file system should be copied to snapshots. The default value is `false`"
+  type        = bool
+  default     = false
+}
+
+variable "openzfs_deployment_type" {
+  description = "The filesystem deployment type. Only `SINGLE_AZ_1` is supported"
+  type        = string
+  default     = null
+}
+
+variable "root_volume_configuration" {
+  description = "The configuration for the root volume of the file system. All other volumes are children or the root volume"
+  type        = any
+  default     = {}
+}
+
+variable "openzfs_throughput_capacity" {
   description = "Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048`"
   type        = number
   default     = null
