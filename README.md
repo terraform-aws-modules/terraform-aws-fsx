@@ -47,6 +47,7 @@ No modules.
 |------|------|
 | [aws_fsx_lustre_file_system.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_lustre_file_system) | resource |
 | [aws_fsx_ontap_file_system.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_ontap_file_system) | resource |
+| [aws_fsx_ontap_storage_virtual_machine.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_ontap_storage_virtual_machine) | resource |
 | [aws_fsx_openzfs_file_system.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_openzfs_file_system) | resource |
 
 ## Inputs
@@ -76,6 +77,7 @@ No modules.
 | <a name="input_log_configuration"></a> [log\_configuration](#input\_log\_configuration) | The configuration object for Amazon FSx for Lustre file systems used in the CreateFileSystem and CreateFileSystemFromBackup operations. | `map(string)` | `{}` | no |
 | <a name="input_lustre_deployment_type"></a> [lustre\_deployment\_type](#input\_lustre\_deployment\_type) | The filesystem deployment type. One of: `SCRATCH_1`, `SCRATCH_2`, `PERSISTENT_1`, `PERSISTENT_2` | `string` | `null` | no |
 | <a name="input_ontap_deployment_type"></a> [ontap\_deployment\_type](#input\_ontap\_deployment\_type) | The filesystem deployment type. One of: `MULTI_AZ_1` or `SINGLE_AZ_1` | `string` | `null` | no |
+| <a name="input_ontap_storage_virtual_machines"></a> [ontap\_storage\_virtual\_machines](#input\_ontap\_storage\_virtual\_machines) | A map of ONTAP storage virtual machine definitions to create | `any` | `{}` | no |
 | <a name="input_ontap_throughput_capacity"></a> [ontap\_throughput\_capacity](#input\_ontap\_throughput\_capacity) | Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048` | `number` | `null` | no |
 | <a name="input_openzfs_deployment_type"></a> [openzfs\_deployment\_type](#input\_openzfs\_deployment\_type) | The filesystem deployment type. Only `SINGLE_AZ_1` is supported | `string` | `null` | no |
 | <a name="input_openzfs_throughput_capacity"></a> [openzfs\_throughput\_capacity](#input\_openzfs\_throughput\_capacity) | Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048` | `number` | `null` | no |
@@ -101,6 +103,7 @@ No modules.
 | <a name="output_file_system_mount_name"></a> [file\_system\_mount\_name](#output\_file\_system\_mount\_name) | The value to be used when mounting the filesystem |
 | <a name="output_file_system_network_interface_ids"></a> [file\_system\_network\_interface\_ids](#output\_file\_system\_network\_interface\_ids) | Set of Elastic Network Interface identifiers from which the file system is accessible. As explained in the [documentation](https://docs.aws.amazon.com/fsx/latest/LustreGuide/mounting-on-premises.html), the first network interface returned is the primary network interface |
 | <a name="output_file_system_root_volume_id"></a> [file\_system\_root\_volume\_id](#output\_file\_system\_root\_volume\_id) | Identifier of the root volume, e.g., `fsvol-12345678` |
+| <a name="output_ontap_storage_virtual_machines"></a> [ontap\_storage\_virtual\_machines](#output\_ontap\_storage\_virtual\_machines) | A map of ONTAP storage virtual machines created and their attributes |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## License

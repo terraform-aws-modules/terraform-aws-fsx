@@ -36,3 +36,12 @@ output "file_system_mount_name" {
   description = "The value to be used when mounting the filesystem"
   value       = try(aws_fsx_lustre_file_system.this[0].mount_name, null)
 }
+
+################################################################################
+# ONTAP Storage Virtual Machine
+################################################################################
+
+output "ontap_storage_virtual_machines" {
+  description = "A map of ONTAP storage virtual machines created and their attributes"
+  value       = aws_fsx_ontap_storage_virtual_machine.this
+}

@@ -74,6 +74,43 @@ resource "aws_fsx_ontap_file_system" "this" {
 }
 
 ################################################################################
+# ONTAP Storage Virtual Machine
+################################################################################
+
+resource "aws_fsx_ontap_storage_virtual_machine" "this" {
+  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create && var.create_ontap }
+
+  file_system_id = aws_fsx_ontap_file_system.this[0].id
+
+  dynamic "active_directory_configuration" {
+    for_each = try([each.value.active_directory_configuration], [])
+
+    content {
+      netbios_name = try(active_directory_configuration.value.netbios_name, null)
+
+      dynamic "self_managed_active_directory_configuration" {
+        for_each = try([active_directory_configuration.value.self_managed_active_directory_configuration], [])
+
+        content {
+          dns_ips                                = self_managed_active_directory_configuration.value.dns_ips
+          domain_name                            = self_managed_active_directory_configuration.value.domain_name
+          file_system_administrators_group       = try(self_managed_active_directory_configuration.value.file_system_administrators_group, null)
+          organizational_unit_distinguished_name = try(self_managed_active_directory_configuration.value.organizational_unit_distinguished_name, null)
+          password                               = self_managed_active_directory_configuration.value.password
+          username                               = self_managed_active_directory_configuration.value.username
+        }
+      }
+    }
+  }
+
+  name                       = try(each.value.name, each.key)
+  root_volume_security_style = try(each.value.root_volume_security_style, null)
+  svm_admin_password         = try(each.value.svm_admin_password, null)
+
+  tags = merge(var.tags, try(each.value.tags, {}))
+}
+
+################################################################################
 # OpenZFS File System
 ################################################################################
 

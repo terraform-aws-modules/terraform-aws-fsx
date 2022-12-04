@@ -197,7 +197,17 @@ variable "ontap_throughput_capacity" {
 }
 
 ################################################################################
-# ONTAP File System
+# ONTAP Storage Virtual Machine
+################################################################################
+
+variable "ontap_storage_virtual_machines" {
+  description = "A map of ONTAP storage virtual machine definitions to create"
+  type        = any
+  default     = {}
+}
+
+################################################################################
+# OpenZFS File System
 ################################################################################
 
 variable "create_openzfs" {
