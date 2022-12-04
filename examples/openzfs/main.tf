@@ -2,9 +2,14 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_availability_zones" "available" {}
+
 locals {
   region = "us-east-1"
-  name   = "fsx-ex-${replace(basename(path.cwd), "_", "-")}"
+  name   = "fsx-ex-${basename(path.cwd)}"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Name       = local.name
@@ -14,17 +19,17 @@ locals {
 }
 
 ################################################################################
-# fsx Module
+# OpenZFS Module
 ################################################################################
 
-module "fsx_disabled" {
-  source = "../.."
+module "fsx_openzfs_disabled" {
+  source = "../../modules/openzfs"
 
   create = false
 }
 
-module "fsx" {
-  source = "../.."
+module "fsx_openzfs" {
+  source = "../../modules/openzfs"
 
   create = false
 
@@ -37,18 +42,17 @@ module "fsx" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   name = local.name
-  cidr = "10.99.0.0/18"
+  cidr = local.vpc_cidr
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  public_subnets  = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
-  private_subnets = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
+  azs             = local.azs
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
-  enable_nat_gateway      = false
-  single_nat_gateway      = true
-  map_public_ip_on_launch = false
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   tags = local.tags
 }
