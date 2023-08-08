@@ -13,7 +13,7 @@ output "file_system_dns_name" {
 }
 
 output "file_system_endpoints" {
-  description = "he endpoints that are used to access data or to manage the file system using the NetApp ONTAP CLI, REST API, or NetApp SnapMirror"
+  description = "The endpoints that are used to access data or to manage the file system using the NetApp ONTAP CLI, REST API, or NetApp SnapMirror"
   value       = try(aws_fsx_ontap_file_system.this[0].endpoints, [])
 }
 
@@ -28,10 +28,33 @@ output "file_system_network_interface_ids" {
 }
 
 ################################################################################
-# ONTAP Storage Virtual Machine
+# ONTAP Storage Virtual Machine(s)
 ################################################################################
 
-output "ontap_storage_virtual_machines" {
+output "storage_virtual_machines" {
   description = "A map of ONTAP storage virtual machines created and their attributes"
   value       = aws_fsx_ontap_storage_virtual_machine.this
+}
+
+################################################################################
+# ONTAP Volume(s)
+################################################################################
+
+output "volues" {
+  description = "A map of ONTAP volumes created and their attributes"
+  value       = aws_fsx_ontap_volume.this
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+output "security_group_arn" {
+  description = "Amazon Resource Name (ARN) of the security group"
+  value       = try(aws_security_group.this[0].arn, null)
+}
+
+output "security_group_id" {
+  description = "ID of the security group"
+  value       = try(aws_security_group.this[0].id, null)
 }

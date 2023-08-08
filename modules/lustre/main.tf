@@ -39,7 +39,7 @@ resource "aws_fsx_lustre_file_system" "this" {
     }
   }
 
-  security_group_ids            = var.security_group_ids
+  security_group_ids            = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
   storage_capacity              = var.storage_capacity
   storage_type                  = var.storage_type
   subnet_ids                    = var.subnet_ids
@@ -151,7 +151,7 @@ resource "aws_fsx_file_cache" "this" {
     }
   }
 
-  security_group_ids = var.security_group_ids
+  security_group_ids = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
   storage_capacity   = var.file_cache_storage_capacity
   subnet_ids         = var.subnet_ids
 

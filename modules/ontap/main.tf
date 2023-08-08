@@ -9,7 +9,6 @@ resource "aws_fsx_ontap_file_system" "this" {
   daily_automatic_backup_start_time = var.daily_automatic_backup_start_time
   deployment_type                   = var.deployment_type
 
-  # ONTAP/OpenZFS unique
   dynamic "disk_iops_configuration" {
     for_each = length(var.disk_iops_configuration) > 0 ? [var.disk_iops_configuration] : []
 
@@ -23,7 +22,7 @@ resource "aws_fsx_ontap_file_system" "this" {
   fsx_admin_password            = var.fsx_admin_password
   kms_key_id                    = var.kms_key_id
   preferred_subnet_id           = var.preferred_subnet_id
-  security_group_ids            = var.security_group_ids
+  security_group_ids            = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
   route_table_ids               = var.route_table_ids
   storage_capacity              = var.storage_capacity
   storage_type                  = var.storage_type
@@ -35,13 +34,11 @@ resource "aws_fsx_ontap_file_system" "this" {
 }
 
 ################################################################################
-# ONTAP Storage Virtual Machine
+# ONTAP Storage Virtual Machine(s)
 ################################################################################
 
 resource "aws_fsx_ontap_storage_virtual_machine" "this" {
-  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create }
-
-  file_system_id = aws_fsx_ontap_file_system.this[0].id
+  for_each = { for k, v in var.storage_virtual_machines : k => v if var.create }
 
   dynamic "active_directory_configuration" {
     for_each = try([each.value.active_directory_configuration], [])
@@ -64,6 +61,7 @@ resource "aws_fsx_ontap_storage_virtual_machine" "this" {
     }
   }
 
+  file_system_id             = aws_fsx_ontap_file_system.this[0].id
   name                       = try(each.value.name, each.key)
   root_volume_security_style = try(each.value.root_volume_security_style, null)
   svm_admin_password         = try(each.value.svm_admin_password, null)
@@ -72,16 +70,99 @@ resource "aws_fsx_ontap_storage_virtual_machine" "this" {
 }
 
 ################################################################################
-# ONTAP Volume
+# ONTAP Volume(s)
 ################################################################################
 
 resource "aws_fsx_ontap_volume" "this" {
-  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create }
+  for_each = { for k, v in var.volumes : k => v if var.create }
 
-  name                       = "test"
-  junction_path              = "/test"
-  size_in_megabytes          = 1024
-  storage_efficiency_enabled = true
-  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.this[0].id
+  junction_path              = try(each.value.junction_path, null)
+  name                       = try(each.value.name, each.value.key)
+  ontap_volume_type          = try(each.value.ontap_volume_type, null)
+  security_style             = try(each.value.security_style, null)
+  size_in_megabytes          = each.value.size_in_megabytes
+  skip_final_backup          = try(each.value.skip_final_backup, null)
+  storage_efficiency_enabled = try(each.value.storage_efficiency_enabled, null)
+  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.this[each.value.storage_virtual_machine_key].id
 
+  dynamic "tiering_policy" {
+    for_each = try([each.value.tiering_policy], [])
+
+    content {
+      cooling_period = try(tiering_policy.value.cooling_period, null)
+      name           = try(tiering_policy.value.name, null)
+    }
+  }
+
+  volume_type = try(each.value.volume_type, null)
+
+  tags = merge(var.tags, try(each.value.tags, {}))
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+locals {
+  create_security_group = var.create && var.create_security_group
+}
+
+data "aws_subnet" "this" {
+  count = local.create_security_group ? 1 : 0
+
+  id = element(var.subnet_ids, 0)
+}
+
+resource "aws_security_group" "this" {
+  count = local.create_security_group ? 1 : 0
+
+  name        = var.security_group_use_name_prefix ? null : var.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${var.security_group_name}-" : null
+  description = var.security_group_description
+  vpc_id      = data.aws_subnet.this[0].vpc_id
+
+  tags = merge(var.tags, var.security_group_tags)
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_vpc_security_group_egress_rule" "this" {
+  for_each = { for k, v in var.security_group_egress_rules : k => v if local.create_security_group }
+
+  # Required
+  security_group_id = aws_security_group.this[0].id
+
+  # Optional
+  cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
+  cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
+  description                  = try(each.value.description, null)
+  from_port                    = try(each.value.from_port, null)
+  ip_protocol                  = try(each.value.ip_protocol, null)
+  prefix_list_id               = lookup(each.value, "prefix_list_id", null)
+  referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
+  to_port                      = try(each.value.to_port, null)
+
+  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+}
+
+
+resource "aws_vpc_security_group_ingress_rule" "this" {
+  for_each = { for k, v in var.security_group_ingress_rules : k => v if local.create_security_group }
+
+  # Required
+  security_group_id = aws_security_group.this[0].id
+
+  # Optional
+  cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
+  cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
+  description                  = try(each.value.description, null)
+  from_port                    = try(each.value.from_port, null)
+  ip_protocol                  = try(each.value.ip_protocol, null)
+  prefix_list_id               = lookup(each.value, "prefix_list_id", null)
+  referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
+  to_port                      = try(each.value.to_port, null)
+
+  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
