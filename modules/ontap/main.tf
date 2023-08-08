@@ -3,11 +3,11 @@
 ################################################################################
 
 resource "aws_fsx_ontap_file_system" "this" {
-  count = var.create && var.create_ontap ? 1 : 0
+  count = var.create ? 1 : 0
 
   automatic_backup_retention_days   = var.automatic_backup_retention_days
   daily_automatic_backup_start_time = var.daily_automatic_backup_start_time
-  deployment_type                   = var.ontap_deployment_type # ONTAP unique
+  deployment_type                   = var.deployment_type
 
   # ONTAP/OpenZFS unique
   dynamic "disk_iops_configuration" {
@@ -19,16 +19,16 @@ resource "aws_fsx_ontap_file_system" "this" {
     }
   }
 
-  endpoint_ip_address_range     = var.endpoint_ip_address_range # ONTAP unique
-  fsx_admin_password            = var.fsx_admin_password        # ONTAP unique
+  endpoint_ip_address_range     = var.endpoint_ip_address_range
+  fsx_admin_password            = var.fsx_admin_password
   kms_key_id                    = var.kms_key_id
-  preferred_subnet_id           = var.preferred_subnet_id # ONTAP unique
+  preferred_subnet_id           = var.preferred_subnet_id
   security_group_ids            = var.security_group_ids
-  route_table_ids               = var.route_table_ids # ONTAP unique
+  route_table_ids               = var.route_table_ids
   storage_capacity              = var.storage_capacity
   storage_type                  = var.storage_type
   subnet_ids                    = var.subnet_ids
-  throughput_capacity           = var.ontap_throughput_capacity # ONTAP unique
+  throughput_capacity           = var.throughput_capacity
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = var.tags
@@ -39,7 +39,7 @@ resource "aws_fsx_ontap_file_system" "this" {
 ################################################################################
 
 resource "aws_fsx_ontap_storage_virtual_machine" "this" {
-  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create && var.create_ontap }
+  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create }
 
   file_system_id = aws_fsx_ontap_file_system.this[0].id
 
@@ -76,12 +76,12 @@ resource "aws_fsx_ontap_storage_virtual_machine" "this" {
 ################################################################################
 
 resource "aws_fsx_ontap_volume" "this" {
-  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create && var.create_ontap }
+  for_each = { for k, v in var.ontap_storage_virtual_machines : k => v if var.create }
 
   name                       = "test"
   junction_path              = "/test"
   size_in_megabytes          = 1024
   storage_efficiency_enabled = true
-  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.test.id
+  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.this[0].id
 
 }

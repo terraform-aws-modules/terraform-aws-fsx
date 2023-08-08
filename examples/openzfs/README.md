@@ -26,19 +26,23 @@ Note that this example may create resources which will incur monetary charges on
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_fsx"></a> [fsx](#module\_fsx) | ../.. | n/a |
-| <a name="module_fsx_disabled"></a> [fsx\_disabled](#module\_fsx\_disabled) | ../.. | n/a |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
+| <a name="module_fsx_openzfs"></a> [fsx\_openzfs](#module\_fsx\_openzfs) | ../../modules/openzfs | n/a |
+| <a name="module_fsx_openzfs_disabled"></a> [fsx\_openzfs\_disabled](#module\_fsx\_openzfs\_disabled) | ../../modules/openzfs | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 

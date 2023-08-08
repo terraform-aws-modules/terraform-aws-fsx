@@ -104,6 +104,12 @@ variable "per_unit_storage_throughput" {
   default     = null
 }
 
+variable "root_squash_configuration" {
+  description = "The Lustre root squash configuration used when creating an Amazon FSx for Lustre file system. When enabled, root squash restricts root-level access from clients that try to access your file system as a root user"
+  type        = any
+  default     = {}
+}
+
 variable "security_group_ids" {
   description = "A list of IDs for the security groups that apply to the specified network interfaces created for file system access. These security groups will apply to all network interfaces"
   type        = list(string)
@@ -135,6 +141,72 @@ variable "weekly_maintenance_start_time" {
 }
 
 ################################################################################
+# Backup
+################################################################################
+
+variable "create_backup" {
+  description = "Whether to create a backup of the file system"
+  type        = bool
+  default     = false
+}
+
+variable "backup_tags" {
+  description = "A map of additional tags to assign to the backup"
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# Data Repository Association(s)
+################################################################################
+
+variable "data_repository_associations" {
+  description = "A map of data repository associations to create"
+  type        = any
+  default     = {}
+}
+
+################################################################################
+# File Cache
+################################################################################
+
+variable "create_file_cache" {
+  description = "Determines whether a file cache is created"
+  type        = bool
+  default     = false
+}
+
+variable "file_cache_copy_tags_to_data_repository_associations" {
+  description = "A boolean flag indicating whether tags for the cache should be copied to data repository associations. This value defaults to `false`"
+  type        = bool
+  default     = null
+}
+
+variable "file_cache_type_version" {
+  description = "The version for the type of cache that you're creating"
+  type        = string
+  default     = "2.12"
+}
+
+variable "file_cache_kms_key_id" {
+  description = "Specifies the ID of the AWS Key Management Service (AWS KMS) key to use for encrypting data on an Amazon File Cache"
+  type        = string
+  default     = null
+}
+
+variable "file_cache_lustre_configuration" {
+  description = "The configuration object for Amazon FSx for Lustre"
+  type        = any
+  default     = {}
+}
+
+variable "file_cache_storage_capacity" {
+  description = "The storage capacity of the cache in gibibytes (GiB). Valid values are 1200 GiB, 2400 GiB, and increments of 2400 GiB"
+  type        = number
+  default     = null
+}
+
+################################################################################
 # Security Group
 ################################################################################
 
@@ -162,8 +234,14 @@ variable "security_group_description" {
   default     = null
 }
 
-variable "security_group_rules" {
-  description = "Security group rules to add to the security group created"
+variable "security_group_ingress_rules" {
+  description = "Security group ingress rules to add to the security group created"
+  type        = any
+  default     = {}
+}
+
+variable "security_group_egress_rules" {
+  description = "Security group egress rules to add to the security group created"
   type        = any
   default     = {}
 }
