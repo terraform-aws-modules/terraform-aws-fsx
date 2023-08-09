@@ -104,6 +104,12 @@ variable "weekly_maintenance_start_time" {
   default     = null
 }
 
+variable "timeouts" {
+  description = "Create, update, and delete timeout configurations for the file system"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # ONTAP Storage Virtual Machine(s)
 ################################################################################
@@ -114,6 +120,12 @@ variable "storage_virtual_machines" {
   default     = {}
 }
 
+variable "storage_virtual_machines_timeouts" {
+  description = "Create, update, and delete timeout configurations for the storage virtual machines"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # ONTAP Volume(s)
 ################################################################################
@@ -121,6 +133,12 @@ variable "storage_virtual_machines" {
 variable "volumes" {
   description = "A map of ONTAP volume definitions to create"
   type        = any
+  default     = {}
+}
+
+variable "volumes_timeouts" {
+  description = "Create, update, and delete timeout configurations for the volumes"
+  type        = map(string)
   default     = {}
 }
 

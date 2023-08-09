@@ -31,6 +31,12 @@ resource "aws_fsx_ontap_file_system" "this" {
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = var.tags
+
+  timeouts {
+    create = try(var.timeouts.create, null)
+    update = try(var.timeouts.update, null)
+    delete = try(var.timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -67,6 +73,12 @@ resource "aws_fsx_ontap_storage_virtual_machine" "this" {
   svm_admin_password         = try(each.value.svm_admin_password, null)
 
   tags = merge(var.tags, try(each.value.tags, {}))
+
+  timeouts {
+    create = try(var.storage_virtual_machines_timeouts.create, null)
+    update = try(var.storage_virtual_machines_timeouts.update, null)
+    delete = try(var.storage_virtual_machines_timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -97,6 +109,12 @@ resource "aws_fsx_ontap_volume" "this" {
   volume_type = try(each.value.volume_type, null)
 
   tags = merge(var.tags, try(each.value.tags, {}))
+
+  timeouts {
+    create = try(var.volumes_timeouts.create, null)
+    update = try(var.volumes_timeouts.update, null)
+    delete = try(var.volumes_timeouts.delete, null)
+  }
 }
 
 ################################################################################

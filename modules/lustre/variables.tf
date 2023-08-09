@@ -140,6 +140,12 @@ variable "weekly_maintenance_start_time" {
   default     = null
 }
 
+variable "timeouts" {
+  description = "Create, update, and delete timeout configurations for the file system"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Backup
 ################################################################################
@@ -156,6 +162,12 @@ variable "backup_tags" {
   default     = {}
 }
 
+variable "backup_timeouts" {
+  description = "Create and delete timeout configurations for the backup"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Data Repository Association(s)
 ################################################################################
@@ -163,6 +175,12 @@ variable "backup_tags" {
 variable "data_repository_associations" {
   description = "A map of data repository associations to create"
   type        = any
+  default     = {}
+}
+
+variable "data_repository_associations_timeouts" {
+  description = "Create, update, and delete timeout configurations for the data repository associations"
+  type        = map(string)
   default     = {}
 }
 

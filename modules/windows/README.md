@@ -78,15 +78,12 @@ No modules.
 | <a name="input_security_group_tags"></a> [security\_group\_tags](#input\_security\_group\_tags) | A map of additional tags to add to the security group created | `map(string)` | `{}` | no |
 | <a name="input_security_group_use_name_prefix"></a> [security\_group\_use\_name\_prefix](#input\_security\_group\_use\_name\_prefix) | Determines whether the security group name (`security_group_name`) is used as a prefix | `bool` | `true` | no |
 | <a name="input_snapshot_name"></a> [snapshot\_name](#input\_snapshot\_name) | The name of the root volume snapshot | `string` | `null` | no |
-| <a name="input_snapshot_timeouts"></a> [snapshot\_timeouts](#input\_snapshot\_timeouts) | Create, update, and delete timeout configurations for the snapshots | `map(string)` | `{}` | no |
 | <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | The storage capacity (GiB) of the file system | `number` | `null` | no |
 | <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD` | `string` | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of IDs for the subnets that the file system will be accessible from | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_throughput_capacity"></a> [throughput\_capacity](#input\_throughput\_capacity) | Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048` | `number` | `null` | no |
-| <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Create, update, and delete timeout configurations for the file system | `map(string)` | `{}` | no |
 | <a name="input_volumes"></a> [volumes](#input\_volumes) | A map of OpenZFS volume definitions to create | `any` | `{}` | no |
-| <a name="input_volumes_timeouts"></a> [volumes\_timeouts](#input\_volumes\_timeouts) | Create, update, and delete timeout configurations for the volumes | `map(string)` | `{}` | no |
 | <a name="input_weekly_maintenance_start_time"></a> [weekly\_maintenance\_start\_time](#input\_weekly\_maintenance\_start\_time) | The preferred start time (in d:HH:MM format) to perform weekly maintenance, in the UTC time zone | `string` | `null` | no |
 
 ## Outputs

@@ -67,6 +67,12 @@ resource "aws_fsx_openzfs_file_system" "this" {
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = var.tags
+
+  timeouts {
+    create = try(var.timeouts.create, null)
+    update = try(var.timeouts.update, null)
+    delete = try(var.timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -123,6 +129,12 @@ resource "aws_fsx_openzfs_volume" "this" {
   volume_type = try(each.value.volume_type, null)
 
   tags = merge(var.tags, try(each.value.tags, {}))
+
+  timeouts {
+    create = try(var.volumes_timeouts.create, null)
+    update = try(var.volumes_timeouts.update, null)
+    delete = try(var.volumes_timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -136,6 +148,12 @@ resource "aws_fsx_openzfs_snapshot" "this" {
   name      = var.snapshot_name
   volume_id = aws_fsx_openzfs_file_system.this[0].root_volume_id
   tags      = var.tags
+
+  timeouts {
+    create = try(var.snapshot_timeouts.create, null)
+    update = try(var.snapshot_timeouts.update, null)
+    delete = try(var.snapshot_timeouts.delete, null)
+  }
 }
 
 # Child volume(s)
@@ -145,6 +163,12 @@ resource "aws_fsx_openzfs_snapshot" "child" {
   name      = try(each.value.snapshot_name, each.value.name, each.value.key)
   volume_id = aws_fsx_openzfs_volume.this[each.key].id
   tags      = merge(var.tags, try(each.value.tags, {}))
+
+  timeouts {
+    create = try(var.snapshot_timeouts.create, null)
+    update = try(var.snapshot_timeouts.update, null)
+    delete = try(var.snapshot_timeouts.delete, null)
+  }
 }
 
 ################################################################################

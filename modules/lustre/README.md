@@ -62,6 +62,7 @@ No modules.
 | <a name="input_automatic_backup_retention_days"></a> [automatic\_backup\_retention\_days](#input\_automatic\_backup\_retention\_days) | The number of days to retain automatic backups. Setting this to 0 disables automatic backups. You can retain automatic backups for a maximum of 90 days. only valid for `PERSISTENT_1` and `PERSISTENT_2` deployment\_type | `number` | `null` | no |
 | <a name="input_backup_id"></a> [backup\_id](#input\_backup\_id) | The ID of the source backup to create the filesystem from | `string` | `null` | no |
 | <a name="input_backup_tags"></a> [backup\_tags](#input\_backup\_tags) | A map of additional tags to assign to the backup | `map(string)` | `{}` | no |
+| <a name="input_backup_timeouts"></a> [backup\_timeouts](#input\_backup\_timeouts) | Create and delete timeout configurations for the backup | `map(string)` | `{}` | no |
 | <a name="input_copy_tags_to_backups"></a> [copy\_tags\_to\_backups](#input\_copy\_tags\_to\_backups) | A boolean flag indicating whether tags for the file system should be copied to backups | `bool` | `false` | no |
 | <a name="input_create"></a> [create](#input\_create) | Determines whether resources will be created (affects all resources) | `bool` | `true` | no |
 | <a name="input_create_backup"></a> [create\_backup](#input\_create\_backup) | Whether to create a backup of the file system | `bool` | `false` | no |
@@ -70,6 +71,7 @@ No modules.
 | <a name="input_daily_automatic_backup_start_time"></a> [daily\_automatic\_backup\_start\_time](#input\_daily\_automatic\_backup\_start\_time) | The preferred time to take daily automatic backups, in the UTC time zone. | `string` | `null` | no |
 | <a name="input_data_compression_type"></a> [data\_compression\_type](#input\_data\_compression\_type) | Sets the data compression configuration for the file system. Valid values are `LZ4` and `NONE`. Default value is `NONE` | `string` | `null` | no |
 | <a name="input_data_repository_associations"></a> [data\_repository\_associations](#input\_data\_repository\_associations) | A map of data repository associations to create | `any` | `{}` | no |
+| <a name="input_data_repository_associations_timeouts"></a> [data\_repository\_associations\_timeouts](#input\_data\_repository\_associations\_timeouts) | Create, update, and delete timeout configurations for the data repository associations | `map(string)` | `{}` | no |
 | <a name="input_deployment_type"></a> [deployment\_type](#input\_deployment\_type) | The filesystem deployment type. One of: `SCRATCH_1`, `SCRATCH_2`, `PERSISTENT_1`, `PERSISTENT_2` | `string` | `null` | no |
 | <a name="input_drive_cache_type"></a> [drive\_cache\_type](#input\_drive\_cache\_type) | The type of drive cache used by `PERSISTENT_1` filesystems that are provisioned with `HDD` `storage_type` | `string` | `null` | no |
 | <a name="input_export_path"></a> [export\_path](#input\_export\_path) | S3 URI (with optional prefix) where the root of your Amazon FSx file system is exported | `string` | `null` | no |
@@ -96,6 +98,7 @@ No modules.
 | <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD` | `string` | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of IDs for the subnets that the file system will be accessible from | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
+| <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Create, update, and delete timeout configurations for the file system | `map(string)` | `{}` | no |
 | <a name="input_weekly_maintenance_start_time"></a> [weekly\_maintenance\_start\_time](#input\_weekly\_maintenance\_start\_time) | The preferred start time (in d:HH:MM format) to perform weekly maintenance, in the UTC time zone | `string` | `null` | no |
 
 ## Outputs

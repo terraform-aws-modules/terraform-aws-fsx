@@ -46,6 +46,12 @@ resource "aws_fsx_lustre_file_system" "this" {
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = var.tags
+
+  timeouts {
+    create = try(var.timeouts.create, null)
+    update = try(var.timeouts.update, null)
+    delete = try(var.timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -57,6 +63,11 @@ resource "aws_fsx_backup" "this" {
 
   file_system_id = aws_fsx_lustre_file_system.this[0].id
   tags           = merge(var.tags, var.backup_tags)
+
+  timeouts {
+    create = try(var.backup_timeouts.create, null)
+    delete = try(var.backup_timeouts.delete, null)
+  }
 }
 
 ################################################################################
@@ -96,6 +107,12 @@ resource "aws_fsx_data_repository_association" "this" {
   }
 
   tags = merge(var.tags, try(each.value.tags, {}))
+
+  timeouts {
+    create = try(var.data_repository_associations_timeouts.create, null)
+    update = try(var.data_repository_associations_timeouts.update, null)
+    delete = try(var.data_repository_associations_timeouts.delete, null)
+  }
 }
 
 ################################################################################
