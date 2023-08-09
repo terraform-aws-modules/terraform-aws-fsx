@@ -111,12 +111,12 @@ resource "aws_fsx_file_cache" "this" {
     for_each = length(var.data_repository_associations) > 0 ? { for k, v in var.data_repository_associations : k => v if try(v.create_file_cache, true) } : []
 
     content {
-      data_repository_path           = each.value.data_repository_path
-      data_repository_subdirectories = try(each.value.data_repository_subdirectories, null)
-      file_cache_path                = each.value.file_cache_path
+      data_repository_path           = data_repository_association.value.data_repository_path
+      data_repository_subdirectories = try(data_repository_association.value.data_repository_subdirectories, null)
+      file_cache_path                = data_repository_association.value.file_cache_path
 
       dynamic "nfs" {
-        for_each = try(each.value.nfs, [])
+        for_each = try(data_repository_association.value.nfs, [])
 
         content {
           dns_ips = try(nfs.value.dns_ips, null)
@@ -124,7 +124,7 @@ resource "aws_fsx_file_cache" "this" {
         }
       }
 
-      tags = merge(var.tags, try(each.value.tags, {}))
+      tags = merge(var.tags, try(data_repository_association.value.tags, {}))
     }
   }
 
