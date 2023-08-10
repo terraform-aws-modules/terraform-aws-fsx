@@ -95,7 +95,9 @@ variable "kms_key_id" {
 variable "log_configuration" {
   description = "The configuration object for Amazon FSx for Lustre file systems used in the CreateFileSystem and CreateFileSystemFromBackup operations."
   type        = map(string)
-  default     = {}
+  default = {
+    level = "WARN_ERROR"
+  }
 }
 
 variable "per_unit_storage_throughput" {
@@ -144,6 +146,40 @@ variable "timeouts" {
   description = "Create, update, and delete timeout configurations for the file system"
   type        = map(string)
   default     = {}
+}
+
+###############################################################################
+# CloudWatch Log Group
+################################################################################
+
+variable "create_cloudwatch_log_group" {
+  description = "Determines whether a log group is created by this module for the cluster logs. If not, AWS will automatically create one if logging is enabled"
+  type        = bool
+  default     = true
+}
+
+variable "cloudwatch_log_group_name" {
+  description = "Name of the CloudWatch Log Group to send logs to. Note: `/aws/fsx/` is pre-pended to the name provided as this is a requirement by FSx"
+  type        = string
+  default     = "lustre"
+}
+
+variable "cloudwatch_log_group_use_name_prefix" {
+  description = "Determines whether the log group name should be prefixed with the `cloudwatch_log_group_name` provided"
+  type        = bool
+  default     = true
+}
+
+variable "cloudwatch_log_group_retention_in_days" {
+  description = "Number of days to retain log events. Default retention - 90 days"
+  type        = number
+  default     = 90
+}
+
+variable "cloudwatch_log_group_kms_key_id" {
+  description = "If a KMS Key ARN is set, this key will be used to encrypt the corresponding log group. Please be sure that the KMS Key has an appropriate key policy (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html)"
+  type        = string
+  default     = null
 }
 
 ################################################################################

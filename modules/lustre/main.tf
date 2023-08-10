@@ -23,7 +23,7 @@ resource "aws_fsx_lustre_file_system" "this" {
     for_each = length(var.log_configuration) > 0 ? [var.log_configuration] : []
 
     content {
-      destination = try(log_configuration.value.destination, null)
+      destination = try(log_configuration.value.destination, aws_cloudwatch_log_group.this[0].arn, null)
       level       = try(log_configuration.value.level, null)
     }
   }
@@ -52,6 +52,28 @@ resource "aws_fsx_lustre_file_system" "this" {
     update = try(var.timeouts.update, null)
     delete = try(var.timeouts.delete, null)
   }
+}
+
+################################################################################
+# CloudWatch Log Group
+################################################################################
+
+locals {
+  log_group_name = "/aws/fsx/${var.cloudwatch_log_group_name}"
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  count = var.create && var.create_cloudwatch_log_group && length(var.log_configuration) > 0 ? 1 : 0
+
+  name              = var.cloudwatch_log_group_use_name_prefix ? null : local.log_group_name
+  name_prefix       = var.cloudwatch_log_group_use_name_prefix ? "${local.log_group_name}-" : null
+  retention_in_days = var.cloudwatch_log_group_retention_in_days
+  kms_key_id        = var.cloudwatch_log_group_kms_key_id
+
+  tags = merge(
+    var.tags,
+    { Name = local.log_group_name }
+  )
 }
 
 ################################################################################
@@ -181,6 +203,18 @@ resource "aws_fsx_file_cache" "this" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+
+  default_rules = {
+    self_988 = {
+      referenced_security_group_id = try(aws_security_group.this[0].id, "")
+    }
+    self_1018_1023 = {
+      referenced_security_group_id = try(aws_security_group.this[0].id, "")
+    }
+  }
+
+  ingress_rules = merge(var.security_group_ingress_rules, local.default_rules)
+  egress_rules  = merge(var.security_group_egress_rules, local.default_rules)
 }
 
 data "aws_subnet" "this" {
@@ -204,8 +238,8 @@ resource "aws_security_group" "this" {
   }
 }
 
-resource "aws_vpc_security_group_egress_rule" "this" {
-  for_each = { for k, v in var.security_group_egress_rules : k => v if local.create_security_group }
+resource "aws_vpc_security_group_egress_rule" "988" {
+  for_each = { for k, v in local.egress_rules : k => v if local.create_security_group }
 
   # Required
   security_group_id = aws_security_group.this[0].id
@@ -213,19 +247,18 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   # Optional
   cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
-  description                  = try(each.value.description, null)
-  from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
+  from_port                    = 988
+  ip_protocol                  = "tcp"
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
-  to_port                      = try(each.value.to_port, null)
+  to_port                      = 988
 
   tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
-
-resource "aws_vpc_security_group_ingress_rule" "this" {
-  for_each = { for k, v in var.security_group_ingress_rules : k => v if local.create_security_group }
+resource "aws_vpc_security_group_egress_rule" "1018_1023" {
+  for_each = { for k, v in local.egress_rules : k => v if local.create_security_group }
 
   # Required
   security_group_id = aws_security_group.this[0].id
@@ -233,12 +266,50 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   # Optional
   cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
-  description                  = try(each.value.description, null)
-  from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
+  from_port                    = 988
+  ip_protocol                  = "tcp"
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
-  to_port                      = try(each.value.to_port, null)
+  to_port                      = 988
+
+  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+}
+
+resource "aws_vpc_security_group_ingress_rule" "988" {
+  for_each = { for k, v in local.ingress_rules : k => v if local.create_security_group }
+
+  # Required
+  security_group_id = aws_security_group.this[0].id
+
+  # Optional
+  cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
+  cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
+  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
+  from_port                    = 1018
+  ip_protocol                  = "tcp"
+  prefix_list_id               = lookup(each.value, "prefix_list_id", null)
+  referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
+  to_port                      = 1023
+
+  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+}
+
+resource "aws_vpc_security_group_ingress_rule" "1018_1023" {
+  for_each = { for k, v in local.ingress_rules : k => v if local.create_security_group }
+
+  # Required
+  security_group_id = aws_security_group.this[0].id
+
+  # Optional
+  cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
+  cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
+  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
+  from_port                    = 1018
+  ip_protocol                  = "tcp"
+  prefix_list_id               = lookup(each.value, "prefix_list_id", null)
+  referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
+  to_port                      = 1023
 
   tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
