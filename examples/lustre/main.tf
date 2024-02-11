@@ -22,12 +22,6 @@ locals {
 # FSx Module
 ################################################################################
 
-module "fsx_lustre_scratch" {
-  source = "../../modules/lustre"
-
-  tags = local.tags
-}
-
 module "fsx_lustre_persistent_1" {
   source = "../../modules/lustre"
 

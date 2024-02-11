@@ -238,7 +238,7 @@ resource "aws_security_group" "this" {
   }
 }
 
-resource "aws_vpc_security_group_egress_rule" "988" {
+resource "aws_vpc_security_group_egress_rule" "this_988" {
   for_each = { for k, v in local.egress_rules : k => v if local.create_security_group }
 
   # Required
@@ -257,7 +257,7 @@ resource "aws_vpc_security_group_egress_rule" "988" {
   tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
-resource "aws_vpc_security_group_egress_rule" "1018_1023" {
+resource "aws_vpc_security_group_egress_rule" "this_1018_1023" {
   for_each = { for k, v in local.egress_rules : k => v if local.create_security_group }
 
   # Required
@@ -276,7 +276,7 @@ resource "aws_vpc_security_group_egress_rule" "1018_1023" {
   tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
-resource "aws_vpc_security_group_ingress_rule" "988" {
+resource "aws_vpc_security_group_ingress_rule" "this_988" {
   for_each = { for k, v in local.ingress_rules : k => v if local.create_security_group }
 
   # Required
@@ -295,7 +295,7 @@ resource "aws_vpc_security_group_ingress_rule" "988" {
   tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
-resource "aws_vpc_security_group_ingress_rule" "1018_1023" {
+resource "aws_vpc_security_group_ingress_rule" "this_1018_1023" {
   for_each = { for k, v in local.ingress_rules : k => v if local.create_security_group }
 
   # Required

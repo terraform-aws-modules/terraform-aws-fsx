@@ -24,7 +24,7 @@ output "file_system_network_interface_ids" {
 
 output "file_system_preferred_file_server_ip" {
   description = "IP address of the primary, or preferred, file server"
-  value       = try(aws_fsx_windows_file_system.this[0].preferred_file_server_ip_address, null)
+  value       = try(aws_fsx_windows_file_system.this[0].preferred_file_server_ip, null)
 }
 
 output "file_system_remote_administration_endpoint" {
