@@ -12,7 +12,7 @@ resource "aws_fsx_windows_file_system" "this" {
     for_each = length(var.audit_log_configuration) > 0 ? [var.audit_log_configuration] : []
 
     content {
-      audit_log_destination             = try(audit_log_configuration.value.audit_log_destination, null)
+      audit_log_destination             = try(audit_log_configuration.value.audit_log_destination, aws_cloudwatch_log_group.this[0].arn, null)
       file_access_audit_log_level       = try(audit_log_configuration.value.file_access_audit_log_level, null)
       file_share_access_audit_log_level = try(audit_log_configuration.value.file_share_access_audit_log_level, null)
     }
@@ -23,20 +23,30 @@ resource "aws_fsx_windows_file_system" "this" {
   copy_tags_to_backups              = var.copy_tags_to_backups
   daily_automatic_backup_start_time = var.daily_automatic_backup_start_time
   deployment_type                   = var.deployment_type
-  kms_key_id                        = var.kms_key_id
-  preferred_subnet_id               = var.preferred_subnet_id
-  security_group_ids                = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
+
+  dynamic "disk_iops_configuration" {
+    for_each = length(var.disk_iops_configuration) > 0 ? [var.disk_iops_configuration] : []
+
+    content {
+      iops = try(disk_iops_configuration.value.iops, null)
+      mode = try(disk_iops_configuration.value.mode, null)
+    }
+  }
+
+  kms_key_id          = var.kms_key_id
+  preferred_subnet_id = var.preferred_subnet_id
+  security_group_ids  = local.security_group_ids
 
   dynamic "self_managed_active_directory" {
     for_each = length(var.self_managed_active_directory) > 0 ? [var.self_managed_active_directory] : []
 
     content {
-      dns_ips                                = try(self_managed_active_directory.value.dns_ips, null)
-      domain_name                            = try(self_managed_active_directory.value.domain_name, null)
+      dns_ips                                = self_managed_active_directory.value.dns_ips
+      domain_name                            = self_managed_active_directory.value.domain_name
       file_system_administrators_group       = try(self_managed_active_directory.value.file_system_administrators_group, null)
       organizational_unit_distinguished_name = try(self_managed_active_directory.value.organizational_unit_distinguished_name, null)
-      password                               = try(self_managed_active_directory.value.password, null)
-      username                               = try(self_managed_active_directory.value.username, null)
+      password                               = self_managed_active_directory.value.password
+      username                               = self_managed_active_directory.value.username
     }
   }
 
@@ -47,7 +57,10 @@ resource "aws_fsx_windows_file_system" "this" {
   throughput_capacity           = var.throughput_capacity
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
-  tags = var.tags
+  tags = merge(
+    { terraform-aws-modules = "fsx" },
+    var.tags,
+  )
 
   timeouts {
     create = try(var.timeouts.create, null)
@@ -57,11 +70,37 @@ resource "aws_fsx_windows_file_system" "this" {
 }
 
 ################################################################################
+# CloudWatch Log Group
+################################################################################
+
+locals {
+  log_group_name = "/aws/fsx/${var.cloudwatch_log_group_name}"
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  count = var.create && var.create_cloudwatch_log_group && length(var.audit_log_configuration) > 0 ? 1 : 0
+
+  name              = var.cloudwatch_log_group_use_name_prefix ? null : local.log_group_name
+  name_prefix       = var.cloudwatch_log_group_use_name_prefix ? "${local.log_group_name}-" : null
+  retention_in_days = var.cloudwatch_log_group_retention_in_days
+  kms_key_id        = var.cloudwatch_log_group_kms_key_id
+  log_group_class   = var.cloudwatch_log_group_class
+
+  tags = merge(
+    var.tags,
+    var.cloudwatch_log_group_tags,
+    { Name = local.log_group_name }
+  )
+}
+
+################################################################################
 # Security Group
+# Ref: https://docs.aws.amazon.com/fsx/latest/WindowsGuide/limit-access-security-groups.html
 ################################################################################
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 }
 
 data "aws_subnet" "this" {
@@ -78,7 +117,10 @@ resource "aws_security_group" "this" {
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
-  tags = merge(var.tags, var.security_group_tags)
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -101,7 +143,11 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+    try(each.value.tags, {}),
+  )
 }
 
 
@@ -121,5 +167,9 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+    try(each.value.tags, {}),
+  )
 }

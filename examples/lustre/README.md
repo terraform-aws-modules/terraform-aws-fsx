@@ -55,6 +55,8 @@ No inputs.
 |------|-------------|
 | <a name="output_persistent_1_backup_arn"></a> [persistent\_1\_backup\_arn](#output\_persistent\_1\_backup\_arn) | Amazon Resource Name of the backup |
 | <a name="output_persistent_1_backup_id"></a> [persistent\_1\_backup\_id](#output\_persistent\_1\_backup\_id) | Identifier of the backup |
+| <a name="output_persistent_1_cloudwatch_log_group_arn"></a> [persistent\_1\_cloudwatch\_log\_group\_arn](#output\_persistent\_1\_cloudwatch\_log\_group\_arn) | Arn of cloudwatch log group created |
+| <a name="output_persistent_1_cloudwatch_log_group_name"></a> [persistent\_1\_cloudwatch\_log\_group\_name](#output\_persistent\_1\_cloudwatch\_log\_group\_name) | Name of cloudwatch log group created |
 | <a name="output_persistent_1_data_repository_associations"></a> [persistent\_1\_data\_repository\_associations](#output\_persistent\_1\_data\_repository\_associations) | Data repository associations created and their attributes |
 | <a name="output_persistent_1_file_cache_arn"></a> [persistent\_1\_file\_cache\_arn](#output\_persistent\_1\_file\_cache\_arn) | Amazon Resource Name of the file cache |
 | <a name="output_persistent_1_file_cache_dns_name"></a> [persistent\_1\_file\_cache\_dns\_name](#output\_persistent\_1\_file\_cache\_dns\_name) | The Domain Name System (DNS) name for the cache |
@@ -68,6 +70,8 @@ No inputs.
 | <a name="output_persistent_1_security_group_id"></a> [persistent\_1\_security\_group\_id](#output\_persistent\_1\_security\_group\_id) | ID of the security group |
 | <a name="output_persistent_2_backup_arn"></a> [persistent\_2\_backup\_arn](#output\_persistent\_2\_backup\_arn) | Amazon Resource Name of the backup |
 | <a name="output_persistent_2_backup_id"></a> [persistent\_2\_backup\_id](#output\_persistent\_2\_backup\_id) | Identifier of the backup |
+| <a name="output_persistent_2_cloudwatch_log_group_arn"></a> [persistent\_2\_cloudwatch\_log\_group\_arn](#output\_persistent\_2\_cloudwatch\_log\_group\_arn) | Arn of cloudwatch log group created |
+| <a name="output_persistent_2_cloudwatch_log_group_name"></a> [persistent\_2\_cloudwatch\_log\_group\_name](#output\_persistent\_2\_cloudwatch\_log\_group\_name) | Name of cloudwatch log group created |
 | <a name="output_persistent_2_data_repository_associations"></a> [persistent\_2\_data\_repository\_associations](#output\_persistent\_2\_data\_repository\_associations) | Data repository associations created and their attributes |
 | <a name="output_persistent_2_file_cache_arn"></a> [persistent\_2\_file\_cache\_arn](#output\_persistent\_2\_file\_cache\_arn) | Amazon Resource Name of the file cache |
 | <a name="output_persistent_2_file_cache_dns_name"></a> [persistent\_2\_file\_cache\_dns\_name](#output\_persistent\_2\_file\_cache\_dns\_name) | The Domain Name System (DNS) name for the cache |

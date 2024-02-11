@@ -27,6 +27,16 @@ output "persistent_1_file_system_mount_name" {
   value       = module.fsx_lustre_persistent_1.file_system_mount_name
 }
 
+output "persistent_1_cloudwatch_log_group_name" {
+  description = "Name of cloudwatch log group created"
+  value       = module.fsx_lustre_persistent_1.cloudwatch_log_group_name
+}
+
+output "persistent_1_cloudwatch_log_group_arn" {
+  description = "Arn of cloudwatch log group created"
+  value       = module.fsx_lustre_persistent_1.cloudwatch_log_group_arn
+}
+
 output "persistent_1_backup_arn" {
   description = "Amazon Resource Name of the backup"
   value       = module.fsx_lustre_persistent_1.backup_arn
@@ -94,6 +104,16 @@ output "persistent_2_file_system_network_interface_ids" {
 output "persistent_2_file_system_mount_name" {
   description = "The value to be used when mounting the filesystem"
   value       = module.fsx_lustre_persistent_2.file_system_mount_name
+}
+
+output "persistent_2_cloudwatch_log_group_name" {
+  description = "Name of cloudwatch log group created"
+  value       = module.fsx_lustre_persistent_2.cloudwatch_log_group_name
+}
+
+output "persistent_2_cloudwatch_log_group_arn" {
+  description = "Arn of cloudwatch log group created"
+  value       = module.fsx_lustre_persistent_2.cloudwatch_log_group_arn
 }
 
 output "persistent_2_backup_arn" {

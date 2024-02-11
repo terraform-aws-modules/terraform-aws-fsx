@@ -29,7 +29,10 @@ variable "aliases" {
 variable "audit_log_configuration" {
   description = "The configuration that Amazon FSx for Windows File Server uses to audit and log user accesses of files, folders, and file shares on the Amazon FSx for Windows File Server file system"
   type        = any
-  default     = {}
+  default = {
+    file_access_audit_log_level       = "FAILURE_ONLY"
+    file_share_access_audit_log_level = "FAILURE_ONLY"
+  }
 }
 
 variable "automatic_backup_retention_days" {
@@ -60,6 +63,12 @@ variable "deployment_type" {
   description = "Specifies the file system deployment type, valid values are `MULTI_AZ_1`, `SINGLE_AZ_1` and `SINGLE_AZ_2`. Default value is `SINGLE_AZ_1`"
   type        = string
   default     = null
+}
+
+variable "disk_iops_configuration" {
+  description = "The SSD IOPS configuration for the Amazon FSx for Windows File Server file system"
+  type        = any
+  default     = {}
 }
 
 variable "kms_key_id" {
@@ -128,6 +137,52 @@ variable "timeouts" {
   default     = {}
 }
 
+###############################################################################
+# CloudWatch Log Group
+################################################################################
+
+variable "create_cloudwatch_log_group" {
+  description = "Determines whether a log group is created"
+  type        = bool
+  default     = true
+}
+
+variable "cloudwatch_log_group_name" {
+  description = "Name of the CloudWatch Log Group to send logs to. Note: `/aws/fsx/` is pre-pended to the name provided as this is a requirement by FSx"
+  type        = string
+  default     = "windows"
+}
+
+variable "cloudwatch_log_group_use_name_prefix" {
+  description = "Determines whether the log group name should be prefixed with the `cloudwatch_log_group_name` provided"
+  type        = bool
+  default     = true
+}
+
+variable "cloudwatch_log_group_retention_in_days" {
+  description = "Number of days to retain log events. Default retention - 90 days"
+  type        = number
+  default     = 90
+}
+
+variable "cloudwatch_log_group_kms_key_id" {
+  description = "If a KMS Key ARN is set, this key will be used to encrypt the corresponding log group. Please be sure that the KMS Key has an appropriate key policy (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html)"
+  type        = string
+  default     = null
+}
+
+variable "cloudwatch_log_group_class" {
+  description = "Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS`"
+  type        = string
+  default     = null
+}
+
+variable "cloudwatch_log_group_tags" {
+  description = "A map of additional tags to add to the cloudwatch log group created"
+  type        = map(string)
+  default     = {}
+}
+
 ################################################################################
 # Security Group
 ################################################################################
@@ -165,7 +220,22 @@ variable "security_group_ingress_rules" {
 variable "security_group_egress_rules" {
   description = "Security group egress rules to add to the security group created"
   type        = any
-  default     = {}
+  default = {
+    ipv4 = {
+      description = "Allow all outbound traffic by default"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    ipv6 = {
+      description = "Allow all outbound traffic by default"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_ipv6   = "::/0"
+    }
+  }
 }
 
 variable "security_group_tags" {

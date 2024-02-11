@@ -24,6 +24,7 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 - [FSx for Lustre](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/lustre)
 - [FSx for NetApp ONTAP](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/ontap)
 - [FSx for OpenZFS](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/openzfs)
+- [FSx for Windows File Server](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/windows)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

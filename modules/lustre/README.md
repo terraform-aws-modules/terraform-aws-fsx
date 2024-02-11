@@ -24,6 +24,7 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 - [FSx for Lustre](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/lustre)
 - [FSx for NetApp ONTAP](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/ontap)
 - [FSx for OpenZFS](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/openzfs)
+- [FSx for Windows File Server](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/windows)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -117,6 +118,8 @@ No modules.
 |------|-------------|
 | <a name="output_backup_arn"></a> [backup\_arn](#output\_backup\_arn) | Amazon Resource Name of the backup |
 | <a name="output_backup_id"></a> [backup\_id](#output\_backup\_id) | Identifier of the backup |
+| <a name="output_cloudwatch_log_group_arn"></a> [cloudwatch\_log\_group\_arn](#output\_cloudwatch\_log\_group\_arn) | Arn of cloudwatch log group created |
+| <a name="output_cloudwatch_log_group_name"></a> [cloudwatch\_log\_group\_name](#output\_cloudwatch\_log\_group\_name) | Name of cloudwatch log group created |
 | <a name="output_data_repository_associations"></a> [data\_repository\_associations](#output\_data\_repository\_associations) | Data repository associations created and their attributes |
 | <a name="output_file_cache_arn"></a> [file\_cache\_arn](#output\_file\_cache\_arn) | Amazon Resource Name of the file cache |
 | <a name="output_file_cache_dns_name"></a> [file\_cache\_dns\_name](#output\_file\_cache\_dns\_name) | The Domain Name System (DNS) name for the cache |
