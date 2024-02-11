@@ -5,8 +5,8 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  region = "us-east-1"
-  name   = "fsx-ex-${basename(path.cwd)}"
+  region = "eu-west-1"
+  name   = "ex-fsx-${basename(path.cwd)}"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)

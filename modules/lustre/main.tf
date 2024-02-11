@@ -254,7 +254,10 @@ resource "aws_security_group" "this" {
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
-  tags = merge(var.tags, var.security_group_tags)
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -270,12 +273,12 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   # Optional
   cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
-  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
-  from_port                    = each.value.from_port
+  description                  = try(each.value.description, null)
+  from_port                    = try(each.value.from_port, null)
   ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
-  to_port                      = each.value.to_port
+  to_port                      = try(each.value.to_port, null)
 
   tags = merge(
     var.tags,
@@ -293,12 +296,12 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   # Optional
   cidr_ipv4                    = lookup(each.value, "cidr_ipv4", null)
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
-  description                  = try(each.value.description, "Allows Lustre traffic between FSx for Lustre file servers")
-  from_port                    = each.value.from_port
+  description                  = try(each.value.description, null)
+  from_port                    = try(each.value.from_port, null)
   ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
-  to_port                      = each.value.to_port
+  to_port                      = try(each.value.to_port, null)
 
   tags = merge(
     var.tags,

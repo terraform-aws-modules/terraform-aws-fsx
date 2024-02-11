@@ -1,4 +1,4 @@
-# Complete AWS FSx Example
+# Complete AWS FSx for Lustre Example
 
 Configuration in this directory creates:
 
