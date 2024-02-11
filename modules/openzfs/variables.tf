@@ -56,10 +56,10 @@ variable "disk_iops_configuration" {
   default     = {}
 }
 
-variable "root_volume_configuration" {
-  description = "The configuration for the root volume of the file system. All other volumes are children or the root volume"
-  type        = any
-  default     = {}
+variable "endpoint_ip_address_range" {
+  description = "(Multi-AZ only) Specifies the IP address range in which the endpoints to access your file system will be created"
+  type        = string
+  default     = null
 }
 
 variable "kms_key_id" {
@@ -68,10 +68,34 @@ variable "kms_key_id" {
   default     = null
 }
 
+variable "preferred_subnet_id" {
+  description = "(Multi-AZ only) Required when deployment_type is set to `MULTI_AZ_1`. This specifies the subnet in which you want the preferred file server to be located"
+  type        = string
+  default     = null
+}
+
+variable "root_volume_configuration" {
+  description = "The configuration for the root volume of the file system. All other volumes are children or the root volume"
+  type        = any
+  default     = {}
+}
+
+variable "route_table_ids" {
+  description = "(Multi-AZ only) Specifies the route tables in which Amazon FSx creates the rules for routing traffic to the correct file server. You should specify all virtual private cloud (VPC) route tables associated with the subnets in which your clients are located"
+  type        = list(string)
+  default     = []
+}
+
 variable "security_group_ids" {
   description = "A list of IDs for the security groups that apply to the specified network interfaces created for file system access. These security groups will apply to all network interfaces"
   type        = list(string)
   default     = []
+}
+
+variable "skip_final_backup" {
+  description = "When enabled, will skip the default final backup taken when the file system is deleted"
+  type        = bool
+  default     = null
 }
 
 variable "storage_capacity" {

@@ -1,14 +1,14 @@
-# AWS FSx Terraform module
+# AWS FSx for OpenZFS Terraform module
 
-Terraform module which creates AWS FSx resources.
+Terraform module which creates AWS FSx for OpenZFS resources.
 
 ## Usage
 
 See [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples) directory for working examples to reference:
 
 ```hcl
-module "fsx" {
-  source = "clowdhaus/fsx/aws"
+module "fsx_openzfs" {
+  source = "clowdhaus/fsx/aws//modules/openzfs"
 
   tags = {
     Terraform   = "true"
@@ -21,7 +21,9 @@ module "fsx" {
 
 Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-- [Complete](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/complete)
+- [FSx for Lustre](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/lustre)
+- [FSx for NetApp ONTAP](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/ontap)
+- [FSx for OpenZFS](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/openzfs)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -68,8 +70,11 @@ No modules.
 | <a name="input_daily_automatic_backup_start_time"></a> [daily\_automatic\_backup\_start\_time](#input\_daily\_automatic\_backup\_start\_time) | The preferred time to take daily automatic backups, in the UTC time zone. | `string` | `null` | no |
 | <a name="input_deployment_type"></a> [deployment\_type](#input\_deployment\_type) | The filesystem deployment type. Only `SINGLE_AZ_1` is supported | `string` | `null` | no |
 | <a name="input_disk_iops_configuration"></a> [disk\_iops\_configuration](#input\_disk\_iops\_configuration) | The SSD IOPS configuration for the Amazon FSx for NetApp ONTAP file system | `map(string)` | `{}` | no |
+| <a name="input_endpoint_ip_address_range"></a> [endpoint\_ip\_address\_range](#input\_endpoint\_ip\_address\_range) | (Multi-AZ only) Specifies the IP address range in which the endpoints to access your file system will be created | `string` | `null` | no |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | ARN for the KMS Key to encrypt the file system at rest. Defaults to an AWS managed KMS Key | `string` | `null` | no |
+| <a name="input_preferred_subnet_id"></a> [preferred\_subnet\_id](#input\_preferred\_subnet\_id) | (Multi-AZ only) Required when deployment\_type is set to `MULTI_AZ_1`. This specifies the subnet in which you want the preferred file server to be located | `string` | `null` | no |
 | <a name="input_root_volume_configuration"></a> [root\_volume\_configuration](#input\_root\_volume\_configuration) | The configuration for the root volume of the file system. All other volumes are children or the root volume | `any` | `{}` | no |
+| <a name="input_route_table_ids"></a> [route\_table\_ids](#input\_route\_table\_ids) | (Multi-AZ only) Specifies the route tables in which Amazon FSx creates the rules for routing traffic to the correct file server. You should specify all virtual private cloud (VPC) route tables associated with the subnets in which your clients are located | `list(string)` | `[]` | no |
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of the security group created | `string` | `null` | no |
 | <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security group egress rules to add to the security group created | `any` | `{}` | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | A list of IDs for the security groups that apply to the specified network interfaces created for file system access. These security groups will apply to all network interfaces | `list(string)` | `[]` | no |
@@ -77,6 +82,7 @@ No modules.
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name to use on security group created | `string` | `null` | no |
 | <a name="input_security_group_tags"></a> [security\_group\_tags](#input\_security\_group\_tags) | A map of additional tags to add to the security group created | `map(string)` | `{}` | no |
 | <a name="input_security_group_use_name_prefix"></a> [security\_group\_use\_name\_prefix](#input\_security\_group\_use\_name\_prefix) | Determines whether the security group name (`security_group_name`) is used as a prefix | `bool` | `true` | no |
+| <a name="input_skip_final_backup"></a> [skip\_final\_backup](#input\_skip\_final\_backup) | When enabled, will skip the default final backup taken when the file system is deleted | `bool` | `null` | no |
 | <a name="input_snapshot_name"></a> [snapshot\_name](#input\_snapshot\_name) | The name of the root volume snapshot | `string` | `null` | no |
 | <a name="input_snapshot_timeouts"></a> [snapshot\_timeouts](#input\_snapshot\_timeouts) | Create, update, and delete timeout configurations for the snapshots | `map(string)` | `{}` | no |
 | <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | The storage capacity (GiB) of the file system | `number` | `null` | no |

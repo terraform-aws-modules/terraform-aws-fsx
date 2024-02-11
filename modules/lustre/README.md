@@ -7,8 +7,8 @@ Terraform module which creates AWS FSx for Lustre resources.
 See [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples) directory for working examples to reference:
 
 ```hcl
-module "fsx" {
-  source = "clowdhaus/fsx/aws"
+module "fsx_lustre" {
+  source = "clowdhaus/fsx/aws//modules/lustre"
 
   tags = {
     Terraform   = "true"
@@ -23,6 +23,7 @@ Examples codified under the [`examples`](https://github.com/clowdhaus/terraform-
 
 - [FSx for Lustre](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/lustre)
 - [FSx for NetApp ONTAP](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/ontap)
+- [FSx for OpenZFS](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/examples/openzfs)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

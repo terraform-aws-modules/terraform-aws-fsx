@@ -24,7 +24,7 @@ resource "aws_fsx_ontap_file_system" "this" {
   kms_key_id                      = var.kms_key_id
   preferred_subnet_id             = var.preferred_subnet_id
   route_table_ids                 = var.route_table_ids
-  security_group_ids              = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
+  security_group_ids              = local.security_group_ids
   storage_capacity                = var.storage_capacity
   storage_type                    = var.storage_type
   subnet_ids                      = var.subnet_ids
@@ -187,7 +187,7 @@ resource "aws_fsx_ontap_volume" "this" {
     }
   }
 
-  volume_type = try(each.value.volume_type, null)
+  volume_type = "ONTAP"
 
   tags = merge(
     var.tags,
@@ -207,6 +207,7 @@ resource "aws_fsx_ontap_volume" "this" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 }
 
 data "aws_subnet" "this" {

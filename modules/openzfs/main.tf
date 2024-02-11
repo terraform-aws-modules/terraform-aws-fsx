@@ -2,6 +2,10 @@
 # OpenZFS File System
 ################################################################################
 
+locals {
+  is_multi_az = var.deployment_type == "MULTI_AZ_1"
+}
+
 resource "aws_fsx_openzfs_file_system" "this" {
   count = var.create ? 1 : 0
 
@@ -20,6 +24,10 @@ resource "aws_fsx_openzfs_file_system" "this" {
       mode = try(disk_iops_configuration.value.mode, null)
     }
   }
+
+  endpoint_ip_address_range = local.is_multi_az ? var.endpoint_ip_address_range : null
+  kms_key_id                = var.kms_key_id
+  preferred_subnet_id       = local.is_multi_az ? var.preferred_subnet_id : null
 
   dynamic "root_volume_configuration" {
     for_each = length(var.root_volume_configuration) > 0 ? [var.root_volume_configuration] : []
@@ -58,15 +66,19 @@ resource "aws_fsx_openzfs_file_system" "this" {
     }
   }
 
-  kms_key_id                    = var.kms_key_id
-  security_group_ids            = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
+  route_table_ids               = local.is_multi_az ? var.route_table_ids : null
+  security_group_ids            = local.security_group_ids
+  skip_final_backup             = var.skip_final_backup
   storage_capacity              = var.storage_capacity
   storage_type                  = var.storage_type
   subnet_ids                    = var.subnet_ids
   throughput_capacity           = var.throughput_capacity
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
-  tags = var.tags
+  tags = merge(
+    { terraform-aws-modules = "fsx" },
+    var.tags,
+  )
 
   timeouts {
     create = try(var.timeouts.create, null)
@@ -84,7 +96,8 @@ resource "aws_fsx_openzfs_volume" "this" {
 
   copy_tags_to_snapshots = try(each.value.copy_tags_to_snapshots, null)
   data_compression_type  = try(each.value.data_compression_type, null)
-  name                   = try(each.value.name, each.value.key)
+  delete_volume_options  = try(each.value.delete_volume_options, null)
+  name                   = try(each.value.name, each.key)
 
   dynamic "nfs_exports" {
     for_each = try([each.value.nfs_exports], [])
@@ -126,9 +139,12 @@ resource "aws_fsx_openzfs_volume" "this" {
     }
   }
 
-  volume_type = try(each.value.volume_type, null)
+  volume_type = "OPENZFS"
 
-  tags = merge(var.tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    try(each.value.tags, {}),
+  )
 
   timeouts {
     create = try(var.volumes_timeouts.create, null)
@@ -160,9 +176,13 @@ resource "aws_fsx_openzfs_snapshot" "this" {
 resource "aws_fsx_openzfs_snapshot" "child" {
   for_each = { for k, v in var.volumes : k => v if var.create && try(v.create_snapshot, false) }
 
-  name      = try(each.value.snapshot_name, each.value.name, each.value.key)
+  name      = try(each.value.snapshot_name, each.value.name, each.key)
   volume_id = aws_fsx_openzfs_volume.this[each.key].id
-  tags      = merge(var.tags, try(each.value.tags, {}))
+
+  tags = merge(
+    var.tags,
+    try(each.value.tags, {}),
+  )
 
   timeouts {
     create = try(var.snapshot_timeouts.create, null)
@@ -177,6 +197,7 @@ resource "aws_fsx_openzfs_snapshot" "child" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 }
 
 data "aws_subnet" "this" {
@@ -193,7 +214,10 @@ resource "aws_security_group" "this" {
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
-  tags = merge(var.tags, var.security_group_tags)
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -216,7 +240,11 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+    try(each.value.tags, {}),
+  )
 }
 
 
@@ -236,5 +264,9 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+    try(each.value.tags, {}),
+  )
 }
