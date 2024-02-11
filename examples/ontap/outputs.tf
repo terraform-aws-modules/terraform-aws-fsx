@@ -34,6 +34,7 @@ output "file_system_network_interface_ids" {
 output "storage_virtual_machines" {
   description = "A map of ONTAP storage virtual machines created and their attributes"
   value       = module.fsx_ontap.storage_virtual_machines
+  sensitive   = true
 }
 
 ################################################################################

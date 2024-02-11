@@ -60,6 +60,7 @@ resource "aws_fsx_windows_file_system" "this" {
   tags = merge(
     { terraform-aws-modules = "fsx" },
     var.tags,
+    { Name = var.name },
   )
 
   timeouts {
@@ -74,7 +75,7 @@ resource "aws_fsx_windows_file_system" "this" {
 ################################################################################
 
 locals {
-  log_group_name = "/aws/fsx/${var.cloudwatch_log_group_name}"
+  log_group_name = "/aws/fsx/${try(coalesce(var.cloudwatch_log_group_name, var.name), "")}"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -100,6 +101,7 @@ resource "aws_cloudwatch_log_group" "this" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_name   = try(coalesce(var.security_group_name, var.name), "")
   security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 }
 
@@ -112,14 +114,15 @@ data "aws_subnet" "this" {
 resource "aws_security_group" "this" {
   count = local.create_security_group ? 1 : 0
 
-  name        = var.security_group_use_name_prefix ? null : var.security_group_name
-  name_prefix = var.security_group_use_name_prefix ? "${var.security_group_name}-" : null
+  name        = var.security_group_use_name_prefix ? null : local.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
   tags = merge(
     var.tags,
     var.security_group_tags,
+    { Name = local.security_group_name },
   )
 
   lifecycle {
@@ -138,7 +141,7 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
   description                  = try(each.value.description, null)
   from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
@@ -149,7 +152,6 @@ resource "aws_vpc_security_group_egress_rule" "this" {
     try(each.value.tags, {}),
   )
 }
-
 
 resource "aws_vpc_security_group_ingress_rule" "this" {
   for_each = { for k, v in var.security_group_ingress_rules : k => v if local.create_security_group }
@@ -162,7 +164,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
   description                  = try(each.value.description, null)
   from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)

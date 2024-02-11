@@ -12,7 +12,6 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
-    Name       = local.name
     Example    = local.name
     Repository = "https://github.com/clowdhaus/terraform-aws-fsx"
   }
@@ -25,6 +24,8 @@ locals {
 module "fsx_ontap" {
   source = "../../modules/ontap"
 
+  name = local.name
+
   # File system
   automatic_backup_retention_days   = 7
   daily_automatic_backup_start_time = "05:00"
@@ -32,17 +33,16 @@ module "fsx_ontap" {
 
   disk_iops_configuration = {
     iops = 3072
-    mode = "AUTOMATIC"
+    mode = "USER_PROVISIONED"
   }
 
-  fsx_admin_password              = "avoid-plaintext-passwords"
-  ha_pairs                        = 2
-  preferred_subnet_id             = module.vpc.private_subnets[0]
-  route_table_ids                 = module.vpc.private_route_table_ids
-  storage_capacity                = 1024
-  subnet_ids                      = module.vpc.private_subnets
-  throughput_capacity_per_ha_pair = 3072
-  weekly_maintenance_start_time   = "1:06:00"
+  fsx_admin_password            = "avoidPlaintextPasswords1"
+  preferred_subnet_id           = module.vpc.private_subnets[0]
+  route_table_ids               = module.vpc.private_route_table_ids
+  storage_capacity              = 1024
+  subnet_ids                    = slice(module.vpc.private_subnets, 0, 2)
+  throughput_capacity           = 128
+  weekly_maintenance_start_time = "1:06:00"
 
   # Storage Virtual Machine(s)
   storage_virtual_machines = {
@@ -61,7 +61,7 @@ module "fsx_ontap" {
     ex-other = {
       name                       = "one"
       root_volume_security_style = "NTFS"
-      svm_admin_password         = "avoid-plaintext-passwords"
+      svm_admin_password         = "avoid-plaintext-passwords1"
 
       volumes = {
         ex-other = {
@@ -76,15 +76,17 @@ module "fsx_ontap" {
           }
         }
         ex-snaplock = {
+          name                       = "snaplock"
           junction_path              = "/snaplock_audit_log"
           size_in_megabytes          = 1024
           storage_efficiency_enabled = true
 
+          bypass_snaplock_enterprise_retention = true
           snaplock_configuration = {
             audit_log_volume           = true
             privileged_delete          = "PERMANENTLY_DISABLED"
             snaplock_type              = "ENTERPRISE"
-            volume_append_mode_enabled = true
+            volume_append_mode_enabled = false
 
             autocommit_period = {
               type  = "DAYS"
@@ -115,24 +117,24 @@ module "fsx_ontap" {
       active_directory_configuration = {
         netbios_name = "mysvm"
         self_managed_active_directory_configuration = {
-          dns_ips     = ["10.0.0.111", "10.0.0.222"]
-          domain_name = "corp.example.com"
-          password    = "avoid-plaintext-passwords"
+          dns_ips     = aws_directory_service_directory.this.dns_ip_addresses
+          domain_name = aws_directory_service_directory.this.name
+          password    = aws_directory_service_directory.this.password
           username    = "Admin"
         }
       }
 
       volumes = {
         ex-snaplock-ent = {
-          junction_path              = "/snaplock_audit_log"
+          name                       = "snaplock_ent"
+          junction_path              = "/log"
           size_in_megabytes          = 1024
           storage_efficiency_enabled = true
 
+          bypass_snaplock_enterprise_retention = true
           snaplock_configuration = {
             snaplock_type = "ENTERPRISE"
           }
-
-          bypass_snaplock_enterprise_retention = true
         }
       }
     }
@@ -140,18 +142,20 @@ module "fsx_ontap" {
 
   # Security group
   security_group_ingress_rules = {
-    cidr_ipv4   = module.vpc.vpc_cidr_block
-    description = "Allow all traffic from the VPC"
-    from_port   = 0
-    protocol    = "tcp"
-    to_port     = 0
+    in = {
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
   }
   security_group_egress_rules = {
-    cidr_ipv4   = "0.0.0.0/0"
-    description = "Allow all traffic"
-    from_port   = 0
-    protocol    = "tcp"
-    to_port     = 0
+    out = {
+      cidr_ipv4   = "0.0.0.0/0"
+      description = "Allow all traffic"
+      ip_protocol = "-1"
+    }
   }
 
   tags = local.tags
@@ -179,6 +183,20 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
   enable_nat_gateway = false
+
+  tags = local.tags
+}
+
+resource "aws_directory_service_directory" "this" {
+  edition  = "Standard"
+  name     = "corp.notexample.com"
+  password = "SuperSecretPassw0rd"
+  type     = "MicrosoftAD"
+
+  vpc_settings {
+    subnet_ids = slice(module.vpc.private_subnets, 0, 2)
+    vpc_id     = module.vpc.vpc_id
+  }
 
   tags = local.tags
 }

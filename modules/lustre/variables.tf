@@ -14,12 +14,6 @@ variable "tags" {
 # Lustre File System
 ################################################################################
 
-variable "auto_import_policy" {
-  description = "How Amazon FSx keeps your file and directory listings up to date as you add or modify objects in your linked S3 bucket"
-  type        = string
-  default     = null
-}
-
 variable "automatic_backup_retention_days" {
   description = "The number of days to retain automatic backups. Setting this to 0 disables automatic backups. You can retain automatic backups for a maximum of 90 days. only valid for `PERSISTENT_1` and `PERSISTENT_2` deployment_type"
   type        = number
@@ -62,27 +56,9 @@ variable "drive_cache_type" {
   default     = null
 }
 
-variable "export_path" {
-  description = "S3 URI (with optional prefix) where the root of your Amazon FSx file system is exported"
-  type        = string
-  default     = null
-}
-
 variable "file_system_type_version" {
   description = "Sets the Lustre version for the file system that you're creating"
   type        = string
-  default     = null
-}
-
-variable "import_path" {
-  description = "S3 URI (with optional prefix) that you're using as the data repository for your FSx for Lustre file system"
-  type        = string
-  default     = null
-}
-
-variable "imported_file_chunk_size" {
-  description = "For files imported from a data repository, this value determines the stripe count and maximum amount of data per file (in MiB) stored on a single physical disk"
-  type        = number
   default     = null
 }
 
@@ -98,6 +74,12 @@ variable "log_configuration" {
   default = {
     level = "WARN_ERROR"
   }
+}
+
+variable "name" {
+  description = "The name of the file system"
+  type        = string
+  default     = ""
 }
 
 variable "per_unit_storage_throughput" {
@@ -161,7 +143,7 @@ variable "create_cloudwatch_log_group" {
 variable "cloudwatch_log_group_name" {
   description = "Name of the CloudWatch Log Group to send logs to. Note: `/aws/fsx/` is pre-pended to the name provided as this is a requirement by FSx"
   type        = string
-  default     = "lustre"
+  default     = null
 }
 
 variable "cloudwatch_log_group_use_name_prefix" {

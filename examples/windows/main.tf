@@ -12,7 +12,6 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
-    Name       = local.name
     Example    = local.name
     Repository = "https://github.com/clowdhaus/terraform-aws-fsx"
   }
@@ -24,6 +23,8 @@ locals {
 
 module "fsx_windows" {
   source = "../../modules/windows"
+
+  name = local.name
 
   # File system
   active_directory_id = aws_directory_service_directory.this.id
@@ -41,7 +42,7 @@ module "fsx_windows" {
 
   disk_iops_configuration = {
     iops = 3072
-    mode = "AUTOMATIC"
+    mode = "USER_PROVISIONED"
   }
 
   preferred_subnet_id = module.vpc.private_subnets[0]
@@ -57,17 +58,19 @@ module "fsx_windows" {
   skip_final_backup             = true
   storage_capacity              = 1024
   storage_type                  = "SSD"
-  subnet_ids                    = module.vpc.private_subnets
+  subnet_ids                    = slice(module.vpc.private_subnets, 0, 2)
   throughput_capacity           = 512
   weekly_maintenance_start_time = "1:06:00"
 
   # Security group
   security_group_ingress_rules = {
-    cidr_ipv4   = module.vpc.vpc_cidr_block
-    description = "Allow all traffic from the VPC"
-    from_port   = 0
-    protocol    = "tcp"
-    to_port     = 0
+    in = {
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
   }
 
   tags = local.tags
@@ -101,12 +104,12 @@ module "vpc" {
 
 resource "aws_directory_service_directory" "this" {
   edition  = "Standard"
-  name     = local.name
+  name     = "corp.notexample.com"
   password = "SuperSecretPassw0rd"
   type     = "MicrosoftAD"
 
   vpc_settings {
-    subnet_ids = module.vpc.private_subnets
+    subnet_ids = slice(module.vpc.private_subnets, 0, 2)
     vpc_id     = module.vpc.vpc_id
   }
 

@@ -63,6 +63,12 @@ variable "kms_key_id" {
   default     = null
 }
 
+variable "name" {
+  description = "The name of the file system"
+  type        = string
+  default     = ""
+}
+
 variable "preferred_subnet_id" {
   description = "The ID for a subnet. A subnet is a range of IP addresses in your virtual private cloud (VPC)"
   type        = string

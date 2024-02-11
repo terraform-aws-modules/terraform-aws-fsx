@@ -12,7 +12,6 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
-    Name       = local.name
     Example    = local.name
     Repository = "https://github.com/clowdhaus/terraform-aws-fsx"
   }
@@ -25,6 +24,8 @@ locals {
 module "fsx_openzfs" {
   source = "../../modules/openzfs"
 
+  name = local.name
+
   # File system
   automatic_backup_retention_days   = 7
   copy_tags_to_backups              = true
@@ -34,7 +35,7 @@ module "fsx_openzfs" {
 
   disk_iops_configuration = {
     iops = 3072
-    mode = "AUTOMATIC"
+    mode = "USER_PROVISIONED"
   }
 
   preferred_subnet_id = module.vpc.private_subnets[0]
@@ -43,32 +44,30 @@ module "fsx_openzfs" {
     copy_tags_to_snapshots = true
     data_compression_type  = "LZ4"
 
-    nfs_exports = [
-      {
-        client_configurations = {
+    nfs_exports = {
+      client_configurations = [
+        {
           clients = "10.0.1.0/24"
           options = ["async", "rw"]
-        }
-      },
-      {
-        client_configurations = {
+        },
+        {
           clients = "*"
           options = ["sync", "rw"]
         }
-      }
-    ]
+      ]
+    }
 
     read_only       = false
     record_size_kib = 128
 
     user_and_group_quotas = [
       {
-        id                         = 10
+        id                         = 0
         storage_capacity_quota_gib = 128
         type                       = "GROUP"
       },
       {
-        id                         = 20
+        id                         = 0
         storage_capacity_quota_gib = 64
         type                       = "USER"
       },
@@ -79,8 +78,8 @@ module "fsx_openzfs" {
   skip_final_backup             = true
   storage_capacity              = 1024
   storage_type                  = "SSD"
-  subnet_ids                    = module.vpc.private_subnets
-  throughput_capacity           = 512
+  subnet_ids                    = slice(module.vpc.private_subnets, 0, 2)
+  throughput_capacity           = 160
   weekly_maintenance_start_time = "1:06:00"
 
   # Volume(s)
@@ -88,23 +87,21 @@ module "fsx_openzfs" {
     ex-one = {
       copy_tags_to_snapshots = true
       data_compression_type  = "LZ4"
-      delete_volume_options  = "DELETE_CHILD_VOLUMES_AND_SNAPSHOTS"
+      delete_volume_options  = ["DELETE_CHILD_VOLUMES_AND_SNAPSHOTS"]
       name                   = "example"
 
-      nfs_exports = [
-        {
-          client_configurations = {
+      nfs_exports = {
+        client_configurations = [
+          {
             clients = "10.0.1.0/24"
             options = ["async", "rw"]
-          }
-        },
-        {
-          client_configurations = {
+          },
+          {
             clients = "*"
             options = ["sync", "rw"]
           }
-        }
-      ]
+        ]
+      }
 
       read_only                        = false
       record_size_kib                  = 128
@@ -113,12 +110,12 @@ module "fsx_openzfs" {
 
       user_and_group_quotas = [
         {
-          id                         = 10
+          id                         = 0
           storage_capacity_quota_gib = 128
           type                       = "GROUP"
         },
         {
-          id                         = 20
+          id                         = 0
           storage_capacity_quota_gib = 64
           type                       = "USER"
         },
@@ -132,18 +129,13 @@ module "fsx_openzfs" {
 
   # Security group
   security_group_ingress_rules = {
-    cidr_ipv4   = module.vpc.vpc_cidr_block
-    description = "Allow all traffic from the VPC"
-    from_port   = 0
-    protocol    = "tcp"
-    to_port     = 0
-  }
-  security_group_egress_rules = {
-    cidr_ipv4   = "0.0.0.0/0"
-    description = "Allow all traffic"
-    from_port   = 0
-    protocol    = "tcp"
-    to_port     = 0
+    in = {
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
   }
 
   tags = local.tags

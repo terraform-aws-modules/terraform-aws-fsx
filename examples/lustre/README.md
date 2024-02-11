@@ -37,6 +37,7 @@ Note that this example may create resources which will incur monetary charges on
 | <a name="module_fsx_lustre_disabled"></a> [fsx\_lustre\_disabled](#module\_fsx\_lustre\_disabled) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_persistent_1"></a> [fsx\_lustre\_persistent\_1](#module\_fsx\_lustre\_persistent\_1) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_persistent_2"></a> [fsx\_lustre\_persistent\_2](#module\_fsx\_lustre\_persistent\_2) | ../../modules/lustre | n/a |
+| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 4.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources

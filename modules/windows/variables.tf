@@ -77,6 +77,12 @@ variable "kms_key_id" {
   default     = null
 }
 
+variable "name" {
+  description = "The name of the file system"
+  type        = string
+  default     = ""
+}
+
 variable "preferred_subnet_id" {
   description = "Specifies the subnet in which you want the preferred file server to be located. Required for when deployment type is `MULTI_AZ_1`"
   type        = string
@@ -150,7 +156,7 @@ variable "create_cloudwatch_log_group" {
 variable "cloudwatch_log_group_name" {
   description = "Name of the CloudWatch Log Group to send logs to. Note: `/aws/fsx/` is pre-pended to the name provided as this is a requirement by FSx"
   type        = string
-  default     = "windows"
+  default     = null
 }
 
 variable "cloudwatch_log_group_use_name_prefix" {
@@ -223,16 +229,12 @@ variable "security_group_egress_rules" {
   default = {
     ipv4 = {
       description = "Allow all outbound traffic by default"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
+      ip_protocol = "-1"
       cidr_ipv4   = "0.0.0.0/0"
     }
     ipv6 = {
       description = "Allow all outbound traffic by default"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
+      ip_protocol = "-1"
       cidr_ipv6   = "::/0"
     }
   }

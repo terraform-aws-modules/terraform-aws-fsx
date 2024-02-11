@@ -2,22 +2,27 @@
 # Lustre File System
 ################################################################################
 
+locals {
+  is_persistent_1 = var.deployment_type == "PERSISTENT_1"
+  is_persistent   = var.deployment_type == "PERSISTENT_1" || var.deployment_type == "PERSISTENT_2"
+}
+
 resource "aws_fsx_lustre_file_system" "this" {
   count = var.create ? 1 : 0
 
-  auto_import_policy                = var.auto_import_policy
-  automatic_backup_retention_days   = var.automatic_backup_retention_days
+  # auto_import_policy - see data_repository_associations
+  automatic_backup_retention_days   = local.is_persistent ? var.automatic_backup_retention_days : null
   backup_id                         = var.backup_id
-  copy_tags_to_backups              = var.copy_tags_to_backups
-  daily_automatic_backup_start_time = var.daily_automatic_backup_start_time
+  copy_tags_to_backups              = local.is_persistent ? var.copy_tags_to_backups : null
+  daily_automatic_backup_start_time = local.is_persistent ? var.daily_automatic_backup_start_time : null
   data_compression_type             = var.data_compression_type
   deployment_type                   = var.deployment_type
-  drive_cache_type                  = var.drive_cache_type
-  export_path                       = var.export_path
-  file_system_type_version          = var.file_system_type_version
-  import_path                       = var.import_path
-  imported_file_chunk_size          = var.imported_file_chunk_size
-  kms_key_id                        = var.kms_key_id
+  drive_cache_type                  = local.is_persistent_1 ? var.drive_cache_type : null
+  # export_path  - see data_repository_associations
+  file_system_type_version = var.file_system_type_version
+  # import_path - see data_repository_associations
+  # imported_file_chunk_size - see data_repository_associations
+  kms_key_id = local.is_persistent ? var.kms_key_id : null
 
   dynamic "log_configuration" {
     for_each = length(var.log_configuration) > 0 ? [var.log_configuration] : []
@@ -41,13 +46,14 @@ resource "aws_fsx_lustre_file_system" "this" {
 
   security_group_ids            = local.security_group_ids
   storage_capacity              = var.storage_capacity
-  storage_type                  = var.storage_type
+  storage_type                  = local.is_persistent_1 ? var.storage_type : null
   subnet_ids                    = var.subnet_ids
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = merge(
     { terraform-aws-modules = "fsx" },
     var.tags,
+    { Name = var.name }
   )
 
   timeouts {
@@ -62,7 +68,7 @@ resource "aws_fsx_lustre_file_system" "this" {
 ################################################################################
 
 locals {
-  log_group_name = "/aws/fsx/${var.cloudwatch_log_group_name}"
+  log_group_name = "/aws/fsx/${try(coalesce(var.cloudwatch_log_group_name, var.name), "")}"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -218,6 +224,7 @@ resource "aws_fsx_file_cache" "this" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_name   = try(coalesce(var.security_group_name, var.name), "")
   security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 
   default_ingress_egress_rules = {
@@ -235,7 +242,6 @@ locals {
     }
   }
 
-
   ingress_rules = merge(var.security_group_ingress_rules, local.default_ingress_egress_rules)
   egress_rules  = merge(var.security_group_egress_rules, local.default_ingress_egress_rules)
 }
@@ -249,14 +255,15 @@ data "aws_subnet" "this" {
 resource "aws_security_group" "this" {
   count = local.create_security_group ? 1 : 0
 
-  name        = var.security_group_use_name_prefix ? null : var.security_group_name
-  name_prefix = var.security_group_use_name_prefix ? "${var.security_group_name}-" : null
+  name        = var.security_group_use_name_prefix ? null : local.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
   tags = merge(
     var.tags,
     var.security_group_tags,
+    { Name = local.security_group_name },
   )
 
   lifecycle {

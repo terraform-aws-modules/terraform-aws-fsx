@@ -35,6 +35,7 @@ resource "aws_fsx_ontap_file_system" "this" {
   tags = merge(
     { terraform-aws-modules = "fsx" },
     var.tags,
+    { Name = var.name },
   )
 
   timeouts {
@@ -107,7 +108,7 @@ locals {
 }
 
 resource "aws_fsx_ontap_volume" "this" {
-  for_each = { for v in local.volumes : "${v.machine_key}/${v.volume_key}" => v if var.create }
+  for_each = { for v in local.volumes : "${v.machine_key}_${v.volume_key}" => v if var.create }
 
   bypass_snaplock_enterprise_retention = try(each.value.bypass_snaplock_enterprise_retention, null)
   copy_tags_to_backups                 = try(each.value.copy_tags_to_backups, null)
@@ -176,7 +177,7 @@ resource "aws_fsx_ontap_volume" "this" {
 
   snapshot_policy            = try(each.value.snapshot_policy, null)
   storage_efficiency_enabled = try(each.value.storage_efficiency_enabled, null)
-  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.this[each.value.storage_virtual_machine_key].id
+  storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.this[each.value.machine_key].id
 
   dynamic "tiering_policy" {
     for_each = try([each.value.tiering_policy], [])
@@ -207,6 +208,7 @@ resource "aws_fsx_ontap_volume" "this" {
 
 locals {
   create_security_group = var.create && var.create_security_group
+  security_group_name   = try(coalesce(var.security_group_name, var.name), "")
   security_group_ids    = local.create_security_group ? concat(var.security_group_ids, aws_security_group.this[*].id) : var.security_group_ids
 }
 
@@ -219,14 +221,15 @@ data "aws_subnet" "this" {
 resource "aws_security_group" "this" {
   count = local.create_security_group ? 1 : 0
 
-  name        = var.security_group_use_name_prefix ? null : var.security_group_name
-  name_prefix = var.security_group_use_name_prefix ? "${var.security_group_name}-" : null
+  name        = var.security_group_use_name_prefix ? null : local.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
   vpc_id      = data.aws_subnet.this[0].vpc_id
 
   tags = merge(
     var.tags,
     var.security_group_tags,
+    { Name = local.security_group_name },
   )
 
   lifecycle {
@@ -245,7 +248,7 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
   description                  = try(each.value.description, null)
   from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
@@ -268,7 +271,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   cidr_ipv6                    = lookup(each.value, "cidr_ipv6", null)
   description                  = try(each.value.description, null)
   from_port                    = try(each.value.from_port, null)
-  ip_protocol                  = try(each.value.ip_protocol, null)
+  ip_protocol                  = try(each.value.ip_protocol, "tcp")
   prefix_list_id               = lookup(each.value, "prefix_list_id", null)
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)

@@ -68,6 +68,12 @@ variable "kms_key_id" {
   default     = null
 }
 
+variable "name" {
+  description = "The name of the file system"
+  type        = string
+  default     = ""
+}
+
 variable "preferred_subnet_id" {
   description = "(Multi-AZ only) Required when deployment_type is set to `MULTI_AZ_1`. This specifies the subnet in which you want the preferred file server to be located"
   type        = string
