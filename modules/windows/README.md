@@ -10,6 +10,47 @@ See [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/exampl
 module "fsx_windows" {
   source = "clowdhaus/fsx/aws//modules/windows"
 
+  name = "example-windows"
+
+  # File system
+  active_directory_id = "d-926724cf57"
+  aliases             = ["filesystem1.example.com"]
+
+  audit_log_configuration = {
+    file_access_audit_log_level       = "SUCCESS_AND_FAILURE"
+    file_share_access_audit_log_level = "SUCCESS_AND_FAILURE"
+  }
+
+  automatic_backup_retention_days   = 7
+  copy_tags_to_backups              = true
+  daily_automatic_backup_start_time = "05:00"
+  deployment_type                   = "MULTI_AZ_1"
+
+  disk_iops_configuration = {
+    iops = 3072
+    mode = "USER_PROVISIONED"
+  }
+
+  preferred_subnet_id = module.vpc.private_subnets[0]
+
+  skip_final_backup             = true
+  storage_capacity              = 1024
+  storage_type                  = "SSD"
+  subnet_ids                    = ["subnet-abcde012", "subnet-bcde012a"]
+  throughput_capacity           = 512
+  weekly_maintenance_start_time = "1:06:00"
+
+  # Security group
+  security_group_ingress_rules = {
+    in = {
+      cidr_ipv4   = ["10.0.0.0/16"]
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
+  }
+
   tags = {
     Terraform   = "true"
     Environment = "dev"

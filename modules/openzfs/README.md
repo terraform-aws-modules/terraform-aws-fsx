@@ -10,6 +10,120 @@ See [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/exampl
 module "fsx_openzfs" {
   source = "clowdhaus/fsx/aws//modules/openzfs"
 
+  name = "example-openzfs"
+
+  # File system
+  automatic_backup_retention_days   = 7
+  copy_tags_to_backups              = true
+  copy_tags_to_volumes              = true
+  daily_automatic_backup_start_time = "05:00"
+  deployment_type                   = "MULTI_AZ_1"
+
+  disk_iops_configuration = {
+    iops = 3072
+    mode = "USER_PROVISIONED"
+  }
+
+  preferred_subnet_id = "subnet-abcde012"
+
+  root_volume_configuration = {
+    copy_tags_to_snapshots = true
+    data_compression_type  = "LZ4"
+
+    nfs_exports = {
+      client_configurations = [
+        {
+          clients = "10.0.1.0/24"
+          options = ["async", "rw"]
+        },
+        {
+          clients = "*"
+          options = ["sync", "rw"]
+        }
+      ]
+    }
+
+    read_only       = false
+    record_size_kib = 128
+
+    user_and_group_quotas = [
+      {
+        id                         = 0
+        storage_capacity_quota_gib = 128
+        type                       = "GROUP"
+      },
+      {
+        id                         = 0
+        storage_capacity_quota_gib = 64
+        type                       = "USER"
+      },
+    ]
+  }
+
+  route_table_ids               = ["rt-12322456", "rt-43433343"]
+  skip_final_backup             = true
+  storage_capacity              = 1024
+  storage_type                  = "SSD"
+  subnet_ids                    = ["subnet-abcde012", "subnet-bcde012a"]
+  throughput_capacity           = 160
+  weekly_maintenance_start_time = "1:06:00"
+
+  # Volume(s)
+  volumes = {
+    ex-one = {
+      copy_tags_to_snapshots = true
+      data_compression_type  = "LZ4"
+      delete_volume_options  = ["DELETE_CHILD_VOLUMES_AND_SNAPSHOTS"]
+      name                   = "example"
+
+      nfs_exports = {
+        client_configurations = [
+          {
+            clients = "10.0.1.0/24"
+            options = ["async", "rw"]
+          },
+          {
+            clients = "*"
+            options = ["sync", "rw"]
+          }
+        ]
+      }
+
+      read_only                        = false
+      record_size_kib                  = 128
+      storage_capacity_quota_gib       = 30
+      storage_capacity_reservation_gib = 20
+
+      user_and_group_quotas = [
+        {
+          id                         = 0
+          storage_capacity_quota_gib = 128
+          type                       = "GROUP"
+        },
+        {
+          id                         = 0
+          storage_capacity_quota_gib = 64
+          type                       = "USER"
+        },
+      ]
+
+      tags = {
+        ExtraTags = "yes"
+      }
+    }
+  }
+
+  # Security group
+  security_group_ingress_rules = {
+    in = {
+      cidr_ipv4   = ["10.0.0.0/16"]
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
+  }
+
   tags = {
     Terraform   = "true"
     Environment = "dev"

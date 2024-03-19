@@ -10,6 +10,140 @@ See [`examples`](https://github.com/clowdhaus/terraform-aws-fsx/tree/main/exampl
 module "fsx_ontap" {
 source = "clowdhaus/fsx/aws//modules/ontap"
 
+  name = "example-ontap"
+
+  # File system
+  automatic_backup_retention_days   = 7
+  daily_automatic_backup_start_time = "05:00"
+  deployment_type                   = "MULTI_AZ_1"
+
+  disk_iops_configuration = {
+    iops = 3072
+    mode = "USER_PROVISIONED"
+  }
+
+  fsx_admin_password            = "avoidPlaintextPasswords1"
+  preferred_subnet_id           = "subnet-abcde012"
+  route_table_ids               = ["rt-12322456", "rt-43433343"]
+  storage_capacity              = 1024
+  subnet_ids                    = ["subnet-abcde012", "subnet-bcde012a"]
+  throughput_capacity           = 128
+  weekly_maintenance_start_time = "1:06:00"
+
+  # Storage Virtual Machine(s)
+  storage_virtual_machines = {
+    ex-basic = {
+      name = "basic"
+
+      volumes = {
+        ex-basic = {
+          name                       = "basic"
+          junction_path              = "/test"
+          size_in_megabytes          = 1024
+          storage_efficiency_enabled = true
+        }
+      }
+    }
+    ex-other = {
+      name                       = "one"
+      root_volume_security_style = "NTFS"
+      svm_admin_password         = "avoid-plaintext-passwords1"
+
+      volumes = {
+        ex-other = {
+          name                       = "other"
+          junction_path              = "/test"
+          size_in_megabytes          = 1024
+          storage_efficiency_enabled = true
+
+          tiering_policy = {
+            name           = "AUTO"
+            cooling_period = 31
+          }
+        }
+        ex-snaplock = {
+          name                       = "snaplock"
+          junction_path              = "/snaplock_audit_log"
+          size_in_megabytes          = 1024
+          storage_efficiency_enabled = true
+
+          bypass_snaplock_enterprise_retention = true
+          snaplock_configuration = {
+            audit_log_volume           = true
+            privileged_delete          = "PERMANENTLY_DISABLED"
+            snaplock_type              = "ENTERPRISE"
+            volume_append_mode_enabled = false
+
+            autocommit_period = {
+              type  = "DAYS"
+              value = 14
+            }
+
+            retention_period = {
+              default_retention = {
+                type  = "DAYS"
+                value = 30
+              }
+
+              maximum_retention = {
+                type  = "MONTHS"
+                value = 9
+              }
+
+              minimum_retention = {
+                type  = "HOURS"
+                value = 24
+              }
+            }
+          }
+        }
+      }
+    }
+    ex-active-directory = {
+      active_directory_configuration = {
+        netbios_name = "mysvm"
+        self_managed_active_directory_configuration = {
+          dns_ips     = ["10.0.0.111", "10.0.0.222"]
+          domain_name = "corp.example.com"
+          password    = "avoid-plaintext-passwords"
+          username    = "Admin"
+        }
+      }
+
+      volumes = {
+        ex-snaplock-ent = {
+          name                       = "snaplock_ent"
+          junction_path              = "/log"
+          size_in_megabytes          = 1024
+          storage_efficiency_enabled = true
+
+          bypass_snaplock_enterprise_retention = true
+          snaplock_configuration = {
+            snaplock_type = "ENTERPRISE"
+          }
+        }
+      }
+    }
+  }
+
+  # Security group
+  security_group_ingress_rules = {
+    in = {
+      cidr_ipv4   = ["10.0.0.0/16"]
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      ip_protocol = "tcp"
+    }
+  }
+  security_group_egress_rules = {
+    out = {
+      cidr_ipv4   = "0.0.0.0/0"
+      description = "Allow all traffic"
+      ip_protocol = "-1"
+    }
+  }
+
   tags = {
     Terraform   = "true"
     Environment = "dev"

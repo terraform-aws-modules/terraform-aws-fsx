@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '**.tf'
-      - '!examples/**.tf'
-
 jobs:
   release:
     name: Release

@@ -2,7 +2,7 @@
 
 Configuration in this directory creates:
 
-- <XXX>
+- FSx for OpenZFS storage system
 
 ## Usage
 

@@ -2,7 +2,8 @@
 
 Configuration in this directory creates:
 
-- <XXX>
+- FSx for Lustre file system with persistent1 storage
+- FSx for Lustre file system with persistent2 storage
 
 ## Usage
 
