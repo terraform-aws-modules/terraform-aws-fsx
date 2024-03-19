@@ -87,4 +87,4 @@ No inputs.
 | <a name="output_persistent_2_security_group_id"></a> [persistent\_2\_security\_group\_id](#output\_persistent\_2\_security\_group\_id) | ID of the security group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/clowdhaus/terraform-aws-fsx/blob/main/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-fsx/blob/master/LICENSE).
