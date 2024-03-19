@@ -1,0 +1,37 @@
+module "wrapper" {
+  source = "../../modules/ontap"
+
+  for_each = var.items
+
+  automatic_backup_retention_days   = try(each.value.automatic_backup_retention_days, var.defaults.automatic_backup_retention_days, null)
+  create                            = try(each.value.create, var.defaults.create, true)
+  create_security_group             = try(each.value.create_security_group, var.defaults.create_security_group, true)
+  daily_automatic_backup_start_time = try(each.value.daily_automatic_backup_start_time, var.defaults.daily_automatic_backup_start_time, null)
+  deployment_type                   = try(each.value.deployment_type, var.defaults.deployment_type, "MULTI_AZ_1")
+  disk_iops_configuration           = try(each.value.disk_iops_configuration, var.defaults.disk_iops_configuration, {})
+  endpoint_ip_address_range         = try(each.value.endpoint_ip_address_range, var.defaults.endpoint_ip_address_range, null)
+  fsx_admin_password                = try(each.value.fsx_admin_password, var.defaults.fsx_admin_password, null)
+  ha_pairs                          = try(each.value.ha_pairs, var.defaults.ha_pairs, null)
+  kms_key_id                        = try(each.value.kms_key_id, var.defaults.kms_key_id, null)
+  name                              = try(each.value.name, var.defaults.name, "")
+  preferred_subnet_id               = try(each.value.preferred_subnet_id, var.defaults.preferred_subnet_id, "")
+  route_table_ids                   = try(each.value.route_table_ids, var.defaults.route_table_ids, [])
+  security_group_description        = try(each.value.security_group_description, var.defaults.security_group_description, null)
+  security_group_egress_rules       = try(each.value.security_group_egress_rules, var.defaults.security_group_egress_rules, {})
+  security_group_ids                = try(each.value.security_group_ids, var.defaults.security_group_ids, [])
+  security_group_ingress_rules      = try(each.value.security_group_ingress_rules, var.defaults.security_group_ingress_rules, {})
+  security_group_name               = try(each.value.security_group_name, var.defaults.security_group_name, null)
+  security_group_tags               = try(each.value.security_group_tags, var.defaults.security_group_tags, {})
+  security_group_use_name_prefix    = try(each.value.security_group_use_name_prefix, var.defaults.security_group_use_name_prefix, true)
+  storage_capacity                  = try(each.value.storage_capacity, var.defaults.storage_capacity, null)
+  storage_type                      = try(each.value.storage_type, var.defaults.storage_type, null)
+  storage_virtual_machines          = try(each.value.storage_virtual_machines, var.defaults.storage_virtual_machines, {})
+  storage_virtual_machines_timeouts = try(each.value.storage_virtual_machines_timeouts, var.defaults.storage_virtual_machines_timeouts, {})
+  subnet_ids                        = try(each.value.subnet_ids, var.defaults.subnet_ids, [])
+  tags                              = try(each.value.tags, var.defaults.tags, {})
+  throughput_capacity               = try(each.value.throughput_capacity, var.defaults.throughput_capacity, null)
+  throughput_capacity_per_ha_pair   = try(each.value.throughput_capacity_per_ha_pair, var.defaults.throughput_capacity_per_ha_pair, null)
+  timeouts                          = try(each.value.timeouts, var.defaults.timeouts, {})
+  volumes_timeouts                  = try(each.value.volumes_timeouts, var.defaults.volumes_timeouts, {})
+  weekly_maintenance_start_time     = try(each.value.weekly_maintenance_start_time, var.defaults.weekly_maintenance_start_time, null)
+}
