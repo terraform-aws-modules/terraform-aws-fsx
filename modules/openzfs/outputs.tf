@@ -19,7 +19,7 @@ output "file_system_id" {
 
 output "file_system_root_volume_id" {
   description = "Identifier of the root volume, e.g., `fsvol-12345678`"
-  value       = try(aws_fsx_openzfs_file_system.this[0].kms_key_id, null)
+  value       = try(aws_fsx_openzfs_file_system.this[0].root_volume_id, null)
 }
 
 output "file_system_network_interface_ids" {
