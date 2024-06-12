@@ -40,7 +40,7 @@ output "storage_virtual_machines" {
 # ONTAP Volume(s)
 ################################################################################
 
-output "volues" {
+output "volumes" {
   description = "A map of ONTAP volumes created and their attributes"
   value       = aws_fsx_ontap_volume.this
 }

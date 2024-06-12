@@ -61,7 +61,7 @@ No inputs.
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
 | <a name="output_storage_virtual_machines"></a> [storage\_virtual\_machines](#output\_storage\_virtual\_machines) | A map of ONTAP storage virtual machines created and their attributes |
-| <a name="output_volues"></a> [volues](#output\_volues) | A map of ONTAP volumes created and their attributes |
+| <a name="output_volumes"></a> [volumes](#output\_volumes) | A map of ONTAP volumes created and their attributes |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-fsx/blob/master/LICENSE).
