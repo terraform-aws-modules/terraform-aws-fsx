@@ -35,6 +35,14 @@ resource "aws_fsx_lustre_file_system" "this" {
 
   per_unit_storage_throughput = var.per_unit_storage_throughput
 
+  dynamic "metadata_configuration" {
+    for_each = length(var.metadata_configuration) > 0 ? [var.metadata_configuration] : []
+    content {
+      mode = try(metadata_configuration.value.mode, null)
+      iops = try(metadata_configuration.value.iops, null)
+    }
+  }
+
   dynamic "root_squash_configuration" {
     for_each = length(var.root_squash_configuration) > 0 ? [var.root_squash_configuration] : []
 
