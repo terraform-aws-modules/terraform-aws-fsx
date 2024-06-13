@@ -27,6 +27,11 @@ output "file_system_network_interface_ids" {
   value       = module.fsx_openzfs.file_system_network_interface_ids
 }
 
+output "file_system_endpoint_ip_address" {
+  description = "IP address of the endpoint that is used to access data or to manage the file system"
+  value       = module.fsx_openzfs.file_system_endpoint_ip_address
+}
+
 ################################################################################
 # OpenZFS Volume(s)
 ################################################################################
