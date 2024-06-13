@@ -117,7 +117,7 @@ resource "aws_fsx_ontap_volume" "this" {
   ontap_volume_type                    = try(each.value.ontap_volume_type, null)
   security_style                       = try(each.value.security_style, null)
   size_in_bytes                        = try(each.value.size_in_bytes, null)
-  size_in_megabytes                    = each.value.size_in_megabytes
+  size_in_megabytes                    = try(each.value.size_in_megabytes, null)
   skip_final_backup                    = try(each.value.skip_final_backup, null)
 
   dynamic "aggregate_configuration" {
