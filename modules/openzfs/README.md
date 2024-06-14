@@ -146,13 +146,13 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.34 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.53 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.34 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.53 |
 
 ## Modules
 
@@ -218,6 +218,7 @@ No modules.
 | <a name="output_child_volumes_snapshots"></a> [child\_volumes\_snapshots](#output\_child\_volumes\_snapshots) | A map of OpenZFS child volumes and their snapshots |
 | <a name="output_file_system_arn"></a> [file\_system\_arn](#output\_file\_system\_arn) | Amazon Resource Name of the file system |
 | <a name="output_file_system_dns_name"></a> [file\_system\_dns\_name](#output\_file\_system\_dns\_name) | DNS name for the file system, e.g., `fs-12345678.fsx.us-west-2.amazonaws.com` |
+| <a name="output_file_system_endpoint_ip_address"></a> [file\_system\_endpoint\_ip\_address](#output\_file\_system\_endpoint\_ip\_address) | IP address of the endpoint that is used to access data or to manage the file system |
 | <a name="output_file_system_id"></a> [file\_system\_id](#output\_file\_system\_id) | Identifier of the file system, e.g., `fs-12345678` |
 | <a name="output_file_system_network_interface_ids"></a> [file\_system\_network\_interface\_ids](#output\_file\_system\_network\_interface\_ids) | Set of Elastic Network Interface identifiers from which the file system is accessible. As explained in the [documentation](https://docs.aws.amazon.com/fsx/latest/LustreGuide/mounting-on-premises.html), the first network interface returned is the primary network interface |
 | <a name="output_file_system_root_volume_id"></a> [file\_system\_root\_volume\_id](#output\_file\_system\_root\_volume\_id) | Identifier of the root volume, e.g., `fsvol-12345678` |

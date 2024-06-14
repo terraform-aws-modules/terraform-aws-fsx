@@ -98,7 +98,7 @@ module "fsx_lustre_persistent_2" {
   automatic_backup_retention_days = 0
   data_compression_type           = "LZ4"
   deployment_type                 = "PERSISTENT_2"
-  file_system_type_version        = "2.12"
+  file_system_type_version        = "2.15"
 
   log_configuration = {
     level = "ERROR_ONLY"
@@ -108,6 +108,11 @@ module "fsx_lustre_persistent_2" {
 
   root_squash_configuration = {
     root_squash = "365534:65534"
+  }
+
+  metadata_configuration = {
+    mode = "USER_PROVISIONED"
+    iops = 1500
   }
 
   storage_capacity              = 1200

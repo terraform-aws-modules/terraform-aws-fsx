@@ -58,6 +58,22 @@ module "fsx_ontap" {
         }
       }
     }
+    ex-flexgroup = {
+      name = "flexgroup"
+
+      volumes = {
+        ex-flexgroup = {
+          name                       = "flexgroup"
+          junction_path              = "/test"
+          size_in_bytes              = 1024000000000
+          storage_efficiency_enabled = true
+          volume_style               = "FLEXGROUP"
+          aggregate_configuration = {
+            constituents_per_aggregate = 9
+          }
+        }
+      }
+    }
     ex-other = {
       name                       = "one"
       root_volume_security_style = "NTFS"

@@ -27,6 +27,11 @@ output "file_system_network_interface_ids" {
   value       = try(aws_fsx_openzfs_file_system.this[0].network_interface_ids, [])
 }
 
+output "file_system_endpoint_ip_address" {
+  description = "IP address of the endpoint that is used to access data or to manage the file system"
+  value       = try(aws_fsx_openzfs_file_system.this[0].endpoint_ip_address, null)
+}
+
 ################################################################################
 # OpenZFS Volume(s)
 ################################################################################

@@ -35,6 +35,7 @@ module "wrapper" {
   log_configuration = try(each.value.log_configuration, var.defaults.log_configuration, {
     level = "WARN_ERROR"
   })
+  metadata_configuration         = try(each.value.metadata_configuration, var.defaults.metadata_configuration, {})
   name                           = try(each.value.name, var.defaults.name, "")
   per_unit_storage_throughput    = try(each.value.per_unit_storage_throughput, var.defaults.per_unit_storage_throughput, null)
   root_squash_configuration      = try(each.value.root_squash_configuration, var.defaults.root_squash_configuration, {})

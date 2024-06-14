@@ -88,6 +88,11 @@ variable "per_unit_storage_throughput" {
   default     = null
 }
 
+variable "metadata_configuration" {
+  description = "The Lustre metadata configuration used when creating an Amazon FSx for Lustre file system. This can be used to specify a user provisioned metadata scale. This is only supported when deployment_type is set to PERSISTENT_2"
+  type        = any
+  default     = {}
+}
 variable "root_squash_configuration" {
   description = "The Lustre root squash configuration used when creating an Amazon FSx for Lustre file system. When enabled, root squash restricts root-level access from clients that try to access your file system as a root user"
   type        = any

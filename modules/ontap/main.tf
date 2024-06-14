@@ -116,8 +116,17 @@ resource "aws_fsx_ontap_volume" "this" {
   name                                 = try(each.value.name, each.key)
   ontap_volume_type                    = try(each.value.ontap_volume_type, null)
   security_style                       = try(each.value.security_style, null)
-  size_in_megabytes                    = each.value.size_in_megabytes
+  size_in_bytes                        = try(each.value.size_in_bytes, null)
+  size_in_megabytes                    = try(each.value.size_in_megabytes, null)
   skip_final_backup                    = try(each.value.skip_final_backup, null)
+
+  dynamic "aggregate_configuration" {
+    for_each = try([each.value.aggregate_configuration], [])
+    content {
+      aggregates                 = try(aggregate_configuration.value.aggregates, null)
+      constituents_per_aggregate = try(aggregate_configuration.value.constituents_per_aggregate, null)
+    }
+  }
 
   dynamic "snaplock_configuration" {
     for_each = try([each.value.snaplock_configuration], [])
@@ -188,7 +197,8 @@ resource "aws_fsx_ontap_volume" "this" {
     }
   }
 
-  volume_type = "ONTAP"
+  volume_style = try(each.value.volume_style, null)
+  volume_type  = "ONTAP"
 
   tags = merge(
     var.tags,
