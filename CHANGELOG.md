@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.0.2...v1.1.0) (2024-06-14)
+
+
+### Features
+
+* Add `metadata_configuration` to FSx Lustre, `aggregate_configuration` to FSx Ontap, and `file_system_endpoint_ip_address` attribute to Openzfs ([#4](https://github.com/terraform-aws-modules/terraform-aws-fsx/issues/4)) ([432eeb2](https://github.com/terraform-aws-modules/terraform-aws-fsx/commit/432eeb288a5fb1d58c1de7d5236c7a2cd91c1952))
+
 ## [1.0.2](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.0.1...v1.0.2) (2024-06-11)
 
 
