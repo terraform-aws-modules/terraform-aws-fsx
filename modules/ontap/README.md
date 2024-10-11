@@ -160,7 +160,7 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 - [FSx for OpenZFS](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/openzfs)
 - [FSx for Windows File Server](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/windows)
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -239,7 +239,7 @@ No modules.
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
 | <a name="output_storage_virtual_machines"></a> [storage\_virtual\_machines](#output\_storage\_virtual\_machines) | A map of ONTAP storage virtual machines created and their attributes |
 | <a name="output_volumes"></a> [volumes](#output\_volumes) | A map of ONTAP volumes created and their attributes |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 

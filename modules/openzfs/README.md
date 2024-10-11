@@ -140,7 +140,7 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 - [FSx for OpenZFS](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/openzfs)
 - [FSx for Windows File Server](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/windows)
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -227,7 +227,7 @@ No modules.
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
 | <a name="output_volumes"></a> [volumes](#output\_volumes) | A map of OpenZFS volumes created and their attributes |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 

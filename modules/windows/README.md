@@ -67,7 +67,7 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 - [FSx for OpenZFS](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/openzfs)
 - [FSx for Windows File Server](https://github.com/terraform-aws-modules/terraform-aws-fsx/tree/master/examples/windows)
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -102,7 +102,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_active_directory_id"></a> [active\_directory\_id](#input\_active\_directory\_id) | The ID for an existing Microsoft Active Directory instance that the file system should join when it's created. Cannot be specified with `self_managed_active_directory` | `string` | `null` | no |
 | <a name="input_aliases"></a> [aliases](#input\_aliases) | An array DNS alias names that you want to associate with the Amazon FSx file system | `list(string)` | `[]` | no |
-| <a name="input_audit_log_configuration"></a> [audit\_log\_configuration](#input\_audit\_log\_configuration) | The configuration that Amazon FSx for Windows File Server uses to audit and log user accesses of files, folders, and file shares on the Amazon FSx for Windows File Server file system | `any` | <pre>{<br>  "file_access_audit_log_level": "FAILURE_ONLY",<br>  "file_share_access_audit_log_level": "FAILURE_ONLY"<br>}</pre> | no |
+| <a name="input_audit_log_configuration"></a> [audit\_log\_configuration](#input\_audit\_log\_configuration) | The configuration that Amazon FSx for Windows File Server uses to audit and log user accesses of files, folders, and file shares on the Amazon FSx for Windows File Server file system | `any` | <pre>{<br/>  "file_access_audit_log_level": "FAILURE_ONLY",<br/>  "file_share_access_audit_log_level": "FAILURE_ONLY"<br/>}</pre> | no |
 | <a name="input_automatic_backup_retention_days"></a> [automatic\_backup\_retention\_days](#input\_automatic\_backup\_retention\_days) | The number of days to retain automatic backups. Minimum of `0` and maximum of `90`. Defaults to `7`. Set to `0` to disable | `number` | `null` | no |
 | <a name="input_backup_id"></a> [backup\_id](#input\_backup\_id) | The ID of the source backup to create the filesystem from | `string` | `null` | no |
 | <a name="input_cloudwatch_log_group_class"></a> [cloudwatch\_log\_group\_class](#input\_cloudwatch\_log\_group\_class) | Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS` | `string` | `null` | no |
@@ -122,7 +122,7 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | The name of the file system | `string` | `""` | no |
 | <a name="input_preferred_subnet_id"></a> [preferred\_subnet\_id](#input\_preferred\_subnet\_id) | Specifies the subnet in which you want the preferred file server to be located. Required for when deployment type is `MULTI_AZ_1` | `string` | `null` | no |
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of the security group created | `string` | `null` | no |
-| <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security group egress rules to add to the security group created | `any` | <pre>{<br>  "ipv4": {<br>    "cidr_ipv4": "0.0.0.0/0",<br>    "description": "Allow all outbound traffic by default",<br>    "ip_protocol": "-1"<br>  },<br>  "ipv6": {<br>    "cidr_ipv6": "::/0",<br>    "description": "Allow all outbound traffic by default",<br>    "ip_protocol": "-1"<br>  }<br>}</pre> | no |
+| <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security group egress rules to add to the security group created | `any` | <pre>{<br/>  "ipv4": {<br/>    "cidr_ipv4": "0.0.0.0/0",<br/>    "description": "Allow all outbound traffic by default",<br/>    "ip_protocol": "-1"<br/>  },<br/>  "ipv6": {<br/>    "cidr_ipv6": "::/0",<br/>    "description": "Allow all outbound traffic by default",<br/>    "ip_protocol": "-1"<br/>  }<br/>}</pre> | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | A list of IDs for the security groups that apply to the specified network interfaces created for file system access. These security groups will apply to all network interfaces | `list(string)` | `[]` | no |
 | <a name="input_security_group_ingress_rules"></a> [security\_group\_ingress\_rules](#input\_security\_group\_ingress\_rules) | Security group ingress rules to add to the security group created | `any` | `{}` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name to use on security group created | `string` | `null` | no |
@@ -152,7 +152,7 @@ No modules.
 | <a name="output_file_system_remote_administration_endpoint"></a> [file\_system\_remote\_administration\_endpoint](#output\_file\_system\_remote\_administration\_endpoint) | For `MULTI_AZ_1` deployment types, use this endpoint when performing administrative tasks on the file system using Amazon FSx Remote PowerShell. For `SINGLE_AZ_1` deployment types, this is the DNS name of the file system |
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 
