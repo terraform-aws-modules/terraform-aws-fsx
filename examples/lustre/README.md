@@ -17,7 +17,7 @@ $ terraform apply
 
 Note that this example may create resources which will incur monetary charges on your AWS bill. Run `terraform destroy` when you no longer need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -85,6 +85,6 @@ No inputs.
 | <a name="output_persistent_2_file_system_network_interface_ids"></a> [persistent\_2\_file\_system\_network\_interface\_ids](#output\_persistent\_2\_file\_system\_network\_interface\_ids) | Set of Elastic Network Interface identifiers from which the file system is accessible. As explained in the [documentation](https://docs.aws.amazon.com/fsx/latest/LustreGuide/mounting-on-premises.html), the first network interface returned is the primary network interface |
 | <a name="output_persistent_2_security_group_arn"></a> [persistent\_2\_security\_group\_arn](#output\_persistent\_2\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_persistent_2_security_group_id"></a> [persistent\_2\_security\_group\_id](#output\_persistent\_2\_security\_group\_id) | ID of the security group |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 Apache-2.0 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-fsx/blob/master/LICENSE).
