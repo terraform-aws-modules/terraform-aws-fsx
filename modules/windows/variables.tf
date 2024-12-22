@@ -183,6 +183,12 @@ variable "cloudwatch_log_group_class" {
   default     = null
 }
 
+variable "cloudwatch_log_group_skip_destroy" {
+  description = "Set to true if you do not wish the log group (and any logs it may contain) to be deleted at destroy time, and instead just remove the log group from the Terraform state"
+  type        = bool
+  default     = null
+}
+
 variable "cloudwatch_log_group_tags" {
   description = "A map of additional tags to add to the cloudwatch log group created"
   type        = map(string)

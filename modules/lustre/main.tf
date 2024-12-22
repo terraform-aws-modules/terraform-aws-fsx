@@ -18,6 +18,7 @@ resource "aws_fsx_lustre_file_system" "this" {
   data_compression_type             = var.data_compression_type
   deployment_type                   = var.deployment_type
   drive_cache_type                  = local.is_persistent_1 ? var.drive_cache_type : null
+  efa_enabled                       = var.efa_enabled
   # export_path  - see data_repository_associations
   file_system_type_version = var.file_system_type_version
   # import_path - see data_repository_associations
@@ -87,6 +88,7 @@ resource "aws_cloudwatch_log_group" "this" {
   retention_in_days = var.cloudwatch_log_group_retention_in_days
   kms_key_id        = var.cloudwatch_log_group_kms_key_id
   log_group_class   = var.cloudwatch_log_group_class
+  skip_destroy      = var.cloudwatch_log_group_skip_destroy
 
   tags = merge(
     var.tags,

@@ -56,6 +56,12 @@ variable "drive_cache_type" {
   default     = null
 }
 
+variable "efa_enabled" {
+  description = "Adds support for Elastic Fabric Adapter (EFA) and GPUDirect Storage (GDS) to Lustre. This must be set at creation. If set this cannot be changed and this prevents changes to per_unit_storage_throughput. This is only supported when deployment_type is set to PERSISTENT_2, metadata_configuration is used, and an EFA-enabled security group is attached"
+  type        = bool
+  default     = null
+}
+
 variable "file_system_type_version" {
   description = "Sets the Lustre version for the file system that you're creating"
   type        = string
@@ -172,6 +178,12 @@ variable "cloudwatch_log_group_kms_key_id" {
 variable "cloudwatch_log_group_class" {
   description = "Specified the log class of the log group. Possible values are: `STANDARD` or `INFREQUENT_ACCESS`"
   type        = string
+  default     = null
+}
+
+variable "cloudwatch_log_group_skip_destroy" {
+  description = "Set to true if you do not wish the log group (and any logs it may contain) to be deleted at destroy time, and instead just remove the log group from the Terraform state"
+  type        = bool
   default     = null
 }
 
