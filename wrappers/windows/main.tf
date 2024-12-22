@@ -15,7 +15,6 @@ module "wrapper" {
   cloudwatch_log_group_kms_key_id        = try(each.value.cloudwatch_log_group_kms_key_id, var.defaults.cloudwatch_log_group_kms_key_id, null)
   cloudwatch_log_group_name              = try(each.value.cloudwatch_log_group_name, var.defaults.cloudwatch_log_group_name, null)
   cloudwatch_log_group_retention_in_days = try(each.value.cloudwatch_log_group_retention_in_days, var.defaults.cloudwatch_log_group_retention_in_days, 90)
-  cloudwatch_log_group_skip_destroy      = try(each.value.cloudwatch_log_group_skip_destroy, var.defaults.cloudwatch_log_group_skip_destroy, null)
   cloudwatch_log_group_tags              = try(each.value.cloudwatch_log_group_tags, var.defaults.cloudwatch_log_group_tags, {})
   cloudwatch_log_group_use_name_prefix   = try(each.value.cloudwatch_log_group_use_name_prefix, var.defaults.cloudwatch_log_group_use_name_prefix, true)
   copy_tags_to_backups                   = try(each.value.copy_tags_to_backups, var.defaults.copy_tags_to_backups, null)
