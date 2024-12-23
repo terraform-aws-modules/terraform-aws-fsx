@@ -171,13 +171,13 @@ Examples codified under the [`examples`](https://github.com/terraform-aws-module
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.53 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.82 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.53 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.82 |
 
 ## Modules
 
@@ -223,6 +223,7 @@ No modules.
 | <a name="input_data_repository_associations_timeouts"></a> [data\_repository\_associations\_timeouts](#input\_data\_repository\_associations\_timeouts) | Create, update, and delete timeout configurations for the data repository associations | `map(string)` | `{}` | no |
 | <a name="input_deployment_type"></a> [deployment\_type](#input\_deployment\_type) | The filesystem deployment type. One of: `SCRATCH_1`, `SCRATCH_2`, `PERSISTENT_1`, `PERSISTENT_2` | `string` | `null` | no |
 | <a name="input_drive_cache_type"></a> [drive\_cache\_type](#input\_drive\_cache\_type) | The type of drive cache used by `PERSISTENT_1` filesystems that are provisioned with `HDD` `storage_type` | `string` | `null` | no |
+| <a name="input_efa_enabled"></a> [efa\_enabled](#input\_efa\_enabled) | Adds support for Elastic Fabric Adapter (EFA) and GPUDirect Storage (GDS) to Lustre. This must be set at creation. If set this cannot be changed and this prevents changes to per\_unit\_storage\_throughput. This is only supported when deployment\_type is set to PERSISTENT\_2, metadata\_configuration is used, and an EFA-enabled security group is attached | `bool` | `null` | no |
 | <a name="input_file_cache_copy_tags_to_data_repository_associations"></a> [file\_cache\_copy\_tags\_to\_data\_repository\_associations](#input\_file\_cache\_copy\_tags\_to\_data\_repository\_associations) | A boolean flag indicating whether tags for the cache should be copied to data repository associations. This value defaults to `false` | `bool` | `null` | no |
 | <a name="input_file_cache_kms_key_id"></a> [file\_cache\_kms\_key\_id](#input\_file\_cache\_kms\_key\_id) | Specifies the ID of the AWS Key Management Service (AWS KMS) key to use for encrypting data on an Amazon File Cache | `string` | `null` | no |
 | <a name="input_file_cache_lustre_configuration"></a> [file\_cache\_lustre\_configuration](#input\_file\_cache\_lustre\_configuration) | The configuration object for Amazon FSx for Lustre | `any` | `{}` | no |

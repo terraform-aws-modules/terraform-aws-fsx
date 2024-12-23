@@ -56,6 +56,12 @@ variable "drive_cache_type" {
   default     = null
 }
 
+variable "efa_enabled" {
+  description = "Adds support for Elastic Fabric Adapter (EFA) and GPUDirect Storage (GDS) to Lustre. This must be set at creation. If set this cannot be changed and this prevents changes to per_unit_storage_throughput. This is only supported when deployment_type is set to PERSISTENT_2, metadata_configuration is used, and an EFA-enabled security group is attached"
+  type        = bool
+  default     = null
+}
+
 variable "file_system_type_version" {
   description = "Sets the Lustre version for the file system that you're creating"
   type        = string

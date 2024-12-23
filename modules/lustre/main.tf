@@ -18,6 +18,7 @@ resource "aws_fsx_lustre_file_system" "this" {
   data_compression_type             = var.data_compression_type
   deployment_type                   = var.deployment_type
   drive_cache_type                  = local.is_persistent_1 ? var.drive_cache_type : null
+  efa_enabled                       = var.efa_enabled
   # export_path  - see data_repository_associations
   file_system_type_version = var.file_system_type_version
   # import_path - see data_repository_associations

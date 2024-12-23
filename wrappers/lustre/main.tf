@@ -25,6 +25,7 @@ module "wrapper" {
   data_repository_associations_timeouts                = try(each.value.data_repository_associations_timeouts, var.defaults.data_repository_associations_timeouts, {})
   deployment_type                                      = try(each.value.deployment_type, var.defaults.deployment_type, null)
   drive_cache_type                                     = try(each.value.drive_cache_type, var.defaults.drive_cache_type, null)
+  efa_enabled                                          = try(each.value.efa_enabled, var.defaults.efa_enabled, null)
   file_cache_copy_tags_to_data_repository_associations = try(each.value.file_cache_copy_tags_to_data_repository_associations, var.defaults.file_cache_copy_tags_to_data_repository_associations, null)
   file_cache_kms_key_id                                = try(each.value.file_cache_kms_key_id, var.defaults.file_cache_kms_key_id, null)
   file_cache_lustre_configuration                      = try(each.value.file_cache_lustre_configuration, var.defaults.file_cache_lustre_configuration, {})
