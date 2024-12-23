@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.1.1...v1.2.0) (2024-12-23)
+
+
+### Features
+
+* Support `aws_fsx_lustre_file_system.efa_enabled` ([#6](https://github.com/terraform-aws-modules/terraform-aws-fsx/issues/6)) ([e172a5b](https://github.com/terraform-aws-modules/terraform-aws-fsx/commit/e172a5b820cb099d2ca0c17657b3d002f80d2358))
+
 ## [1.1.1](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.1.0...v1.1.1) (2024-10-11)
 
 
