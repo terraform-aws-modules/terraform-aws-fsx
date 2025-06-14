@@ -25,6 +25,14 @@ resource "aws_fsx_lustre_file_system" "this" {
   # imported_file_chunk_size - see data_repository_associations
   kms_key_id = local.is_persistent ? var.kms_key_id : null
 
+  dynamic "data_read_cache_configuration" {
+    for_each = length(var.data_read_cache_configuration) > 0 ? [var.data_read_cache_configuration] : []
+    content {
+      size        = try(data_read_cache_configuration.value.size, null)
+      sizing_mode = data_read_cache_configuration.value.sizing_mode
+    }
+  }
+
   dynamic "log_configuration" {
     for_each = length(var.log_configuration) > 0 ? [var.log_configuration] : []
 
@@ -55,8 +63,9 @@ resource "aws_fsx_lustre_file_system" "this" {
 
   security_group_ids            = local.security_group_ids
   storage_capacity              = var.storage_capacity
-  storage_type                  = local.is_persistent_1 ? var.storage_type : null
+  storage_type                  = var.storage_type
   subnet_ids                    = var.subnet_ids
+  throughput_capacity           = var.throughput_capacity
   weekly_maintenance_start_time = var.weekly_maintenance_start_time
 
   tags = merge(

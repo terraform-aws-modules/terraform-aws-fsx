@@ -23,19 +23,20 @@ Note that this example may create resources which will incur monetary charges on
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.82 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.100 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.82 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.100 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_fsx_lustre_disabled"></a> [fsx\_lustre\_disabled](#module\_fsx\_lustre\_disabled) | ../../modules/lustre | n/a |
+| <a name="module_fsx_lustre_intelligent_tiering"></a> [fsx\_lustre\_intelligent\_tiering](#module\_fsx\_lustre\_intelligent\_tiering) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_persistent_1"></a> [fsx\_lustre\_persistent\_1](#module\_fsx\_lustre\_persistent\_1) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_persistent_2"></a> [fsx\_lustre\_persistent\_2](#module\_fsx\_lustre\_persistent\_2) | ../../modules/lustre | n/a |
 | <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 4.0 |
