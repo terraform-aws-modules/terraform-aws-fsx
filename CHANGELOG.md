@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.2.0...v1.3.0) (2025-06-18)
+
+
+### Features
+
+* Support FSX Lustre Intelligent Tiering ([#7](https://github.com/terraform-aws-modules/terraform-aws-fsx/issues/7)) ([a3823ce](https://github.com/terraform-aws-modules/terraform-aws-fsx/commit/a3823ce609b5fe061647a9efec3a995f3fdcadb7))
+
 ## [1.2.0](https://github.com/terraform-aws-modules/terraform-aws-fsx/compare/v1.1.1...v1.2.0) (2024-12-23)
 
 
