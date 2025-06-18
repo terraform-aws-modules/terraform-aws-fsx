@@ -44,6 +44,12 @@ variable "data_compression_type" {
   default     = null
 }
 
+variable "data_read_cache_configuration" {
+  description = "The Lustre data read cache configuration used when creating an Amazon FSx for Lustre file system. Used to configure sizing mode for the cache and size of the file system's SSD read cache, in gibibytes (GiB)."
+  type        = any
+  default     = {}
+}
+
 variable "deployment_type" {
   description = "The filesystem deployment type. One of: `SCRATCH_1`, `SCRATCH_2`, `PERSISTENT_1`, `PERSISTENT_2`"
   type        = string
@@ -118,7 +124,7 @@ variable "storage_capacity" {
 }
 
 variable "storage_type" {
-  description = "The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD`"
+  description = "The filesystem storage type. One of `SSD`, `HDD` or `INTELLIGENT_TIERING`, defaults to `SSD`. `HDD` is only supported on `PERSISTENT_1` deployment types. `INTELLIGENT_TIERING` requires `data_read_cache_configuration` and `metadata_configuration` to be set and is only supported for `PERSISTENT_2` deployment types"
   type        = string
   default     = null
 }
@@ -127,6 +133,12 @@ variable "subnet_ids" {
   description = "A list of IDs for the subnets that the file system will be accessible from"
   type        = list(string)
   default     = []
+}
+
+variable "throughput_capacity" {
+  description = "Throughput in MBps required for the `INTELLIGENT_TIERING` storage type. Must be 4000 or multiples of 4000"
+  type        = number
+  default     = null
 }
 
 variable "weekly_maintenance_start_time" {

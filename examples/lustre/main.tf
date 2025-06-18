@@ -163,6 +163,65 @@ module "fsx_lustre_persistent_2" {
   tags = local.tags
 }
 
+module "fsx_lustre_intelligent_tiering" {
+  source = "../../modules/lustre"
+
+  name = "${local.name}-intelligent-tiering"
+
+  # File system
+  automatic_backup_retention_days = 0
+  data_compression_type           = "LZ4"
+  deployment_type                 = "PERSISTENT_2"
+  file_system_type_version        = "2.15"
+
+  # Cannot create data repository association for file system with 'INTELLIGENT_TIERING' storage type
+  # StorageCapacity is not a supported parameter for Lustre file systems with StorageType INTELLIGENT_TIERING
+  # PerUnitStorageThroughput is not a supported parameter on Lustre file systems with StorageType INTELLIGENT_TIERING
+  # LogConfiguration is not a supported parameter on Lustre file systems with StorageType INTELLIGENT_TIERING
+  log_configuration = {}
+
+  root_squash_configuration = {
+    root_squash = "365534:65534"
+  }
+
+  throughput_capacity = 4000
+  data_read_cache_configuration = {
+    sizing_mode = "USER_PROVISIONED"
+    size        = 32
+  }
+
+  metadata_configuration = {
+    mode = "USER_PROVISIONED"
+    # Valid metadata IOPS are 6000, 12000
+    iops = 6000
+  }
+
+  storage_type                  = "INTELLIGENT_TIERING"
+  subnet_ids                    = slice(module.vpc.private_subnets, 0, 1)
+  weekly_maintenance_start_time = "1:06:00"
+
+  # Security group
+  security_group_name = local.name
+  security_group_ingress_rules = {
+    in = {
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+      description = "Allow all traffic from the VPC"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "tcp"
+    }
+  }
+  security_group_egress_rules = {
+    out = {
+      cidr_ipv4   = "0.0.0.0/0"
+      description = "Allow all traffic"
+      ip_protocol = "-1"
+    }
+  }
+
+  tags = local.tags
+}
+
 module "fsx_lustre_disabled" {
   source = "../../modules/lustre"
 

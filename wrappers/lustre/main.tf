@@ -21,6 +21,7 @@ module "wrapper" {
   create_security_group                                = try(each.value.create_security_group, var.defaults.create_security_group, true)
   daily_automatic_backup_start_time                    = try(each.value.daily_automatic_backup_start_time, var.defaults.daily_automatic_backup_start_time, null)
   data_compression_type                                = try(each.value.data_compression_type, var.defaults.data_compression_type, null)
+  data_read_cache_configuration                        = try(each.value.data_read_cache_configuration, var.defaults.data_read_cache_configuration, {})
   data_repository_associations                         = try(each.value.data_repository_associations, var.defaults.data_repository_associations, {})
   data_repository_associations_timeouts                = try(each.value.data_repository_associations_timeouts, var.defaults.data_repository_associations_timeouts, {})
   deployment_type                                      = try(each.value.deployment_type, var.defaults.deployment_type, null)
@@ -51,6 +52,7 @@ module "wrapper" {
   storage_type                   = try(each.value.storage_type, var.defaults.storage_type, null)
   subnet_ids                     = try(each.value.subnet_ids, var.defaults.subnet_ids, [])
   tags                           = try(each.value.tags, var.defaults.tags, {})
+  throughput_capacity            = try(each.value.throughput_capacity, var.defaults.throughput_capacity, null)
   timeouts                       = try(each.value.timeouts, var.defaults.timeouts, {})
   weekly_maintenance_start_time  = try(each.value.weekly_maintenance_start_time, var.defaults.weekly_maintenance_start_time, null)
 }
