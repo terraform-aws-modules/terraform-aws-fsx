@@ -91,42 +91,45 @@ module "fsx_ontap" {
             cooling_period = 31
           }
         }
-        ex-snaplock = {
-          name                       = "snaplock"
-          junction_path              = "/snaplock_audit_log"
-          size_in_megabytes          = 1024
-          storage_efficiency_enabled = true
-
-          bypass_snaplock_enterprise_retention = true
-          snaplock_configuration = {
-            audit_log_volume           = true
-            privileged_delete          = "PERMANENTLY_DISABLED"
-            snaplock_type              = "ENTERPRISE"
-            volume_append_mode_enabled = false
-
-            autocommit_period = {
-              type  = "DAYS"
-              value = 14
-            }
-
-            retention_period = {
-              default_retention = {
-                type  = "DAYS"
-                value = 30
-              }
-
-              maximum_retention = {
-                type  = "MONTHS"
-                value = 9
-              }
-
-              minimum_retention = {
-                type  = "HOURS"
-                value = 24
-              }
-            }
-          }
-        }
+        # Note that Snaplock Audit Log Volume minimum retention is 6 months and cannot be overridden or deleted during this time
+        # https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/how-snaplock-works.html#snaplock-audit-log-volume
+        # https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/snaplock-delete-volume.html
+        #        ex-snaplock = {
+        #          name                       = "snaplock"
+        #          junction_path              = "/snaplock_audit_log"
+        #          size_in_megabytes          = 1024
+        #          storage_efficiency_enabled = true
+        #
+        #          bypass_snaplock_enterprise_retention = true
+        #          snaplock_configuration = {
+        #            audit_log_volume           = true
+        #            privileged_delete          = "PERMANENTLY_DISABLED"
+        #            snaplock_type              = "ENTERPRISE"
+        #            volume_append_mode_enabled = false
+        #
+        #            autocommit_period = {
+        #              type  = "DAYS"
+        #              value = 14
+        #            }
+        #
+        #            retention_period = {
+        #              default_retention = {
+        #                type  = "DAYS"
+        #                value = 30
+        #              }
+        #
+        #              maximum_retention = {
+        #                type  = "MONTHS"
+        #                value = 9
+        #              }
+        #
+        #              minimum_retention = {
+        #                type  = "HOURS"
+        #                value = 24
+        #              }
+        #            }
+        #          }
+        #        }
       }
     }
     ex-active-directory = {
