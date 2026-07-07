@@ -189,6 +189,7 @@ No modules.
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | ARN for the KMS Key to encrypt the file system at rest. Defaults to an AWS managed KMS Key | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the file system | `string` | `""` | no |
 | <a name="input_preferred_subnet_id"></a> [preferred\_subnet\_id](#input\_preferred\_subnet\_id) | (Multi-AZ only) Required when deployment\_type is set to `MULTI_AZ_1`. This specifies the subnet in which you want the preferred file server to be located | `string` | `null` | no |
+| <a name="input_read_cache_configuration"></a> [read\_cache\_configuration](#input\_read\_cache\_configuration) | The optional provisioned SSD read cache configuration for file systems that use the `INTELLIGENT_TIERING` storage type. Required when `storage_type` is set to `INTELLIGENT_TIERING` | `map(string)` | `{}` | no |
 | <a name="input_root_volume_configuration"></a> [root\_volume\_configuration](#input\_root\_volume\_configuration) | The configuration for the root volume of the file system. All other volumes are children or the root volume | `any` | `{}` | no |
 | <a name="input_route_table_ids"></a> [route\_table\_ids](#input\_route\_table\_ids) | (Multi-AZ only) Specifies the route tables in which Amazon FSx creates the rules for routing traffic to the correct file server. You should specify all virtual private cloud (VPC) route tables associated with the subnets in which your clients are located | `list(string)` | `[]` | no |
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of the security group created | `string` | `null` | no |
@@ -202,7 +203,7 @@ No modules.
 | <a name="input_snapshot_name"></a> [snapshot\_name](#input\_snapshot\_name) | The name of the root volume snapshot | `string` | `null` | no |
 | <a name="input_snapshot_timeouts"></a> [snapshot\_timeouts](#input\_snapshot\_timeouts) | Create, update, and delete timeout configurations for the snapshots | `map(string)` | `{}` | no |
 | <a name="input_storage_capacity"></a> [storage\_capacity](#input\_storage\_capacity) | The storage capacity (GiB) of the file system | `number` | `null` | no |
-| <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD` | `string` | `null` | no |
+| <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | The filesystem storage type. Either `SSD` or `INTELLIGENT_TIERING`, defaults to `SSD`. `INTELLIGENT_TIERING` requires `deployment_type` to be `MULTI_AZ_1` | `string` | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of IDs for the subnets that the file system will be accessible from | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_throughput_capacity"></a> [throughput\_capacity](#input\_throughput\_capacity) | Sets the throughput capacity (in MBps) for the file system that you're creating. Valid values are `128`, `256`, `512`, `1024`, and `2048` | `number` | `null` | no |

@@ -80,6 +80,12 @@ variable "preferred_subnet_id" {
   default     = null
 }
 
+variable "read_cache_configuration" {
+  description = "The optional provisioned SSD read cache configuration for file systems that use the `INTELLIGENT_TIERING` storage type. Required when `storage_type` is set to `INTELLIGENT_TIERING`"
+  type        = map(string)
+  default     = {}
+}
+
 variable "root_volume_configuration" {
   description = "The configuration for the root volume of the file system. All other volumes are children or the root volume"
   type        = any
@@ -111,7 +117,7 @@ variable "storage_capacity" {
 }
 
 variable "storage_type" {
-  description = "The filesystem storage type. Either `SSD` or `HDD`, defaults to `SSD`"
+  description = "The filesystem storage type. Either `SSD` or `INTELLIGENT_TIERING`, defaults to `SSD`. `INTELLIGENT_TIERING` requires `deployment_type` to be `MULTI_AZ_1`"
   type        = string
   default     = null
 }

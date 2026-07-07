@@ -17,6 +17,7 @@ module "wrapper" {
   kms_key_id                        = try(each.value.kms_key_id, var.defaults.kms_key_id, null)
   name                              = try(each.value.name, var.defaults.name, "")
   preferred_subnet_id               = try(each.value.preferred_subnet_id, var.defaults.preferred_subnet_id, null)
+  read_cache_configuration          = try(each.value.read_cache_configuration, var.defaults.read_cache_configuration, {})
   root_volume_configuration         = try(each.value.root_volume_configuration, var.defaults.root_volume_configuration, {})
   route_table_ids                   = try(each.value.route_table_ids, var.defaults.route_table_ids, [])
   security_group_description        = try(each.value.security_group_description, var.defaults.security_group_description, null)

@@ -29,6 +29,15 @@ resource "aws_fsx_openzfs_file_system" "this" {
   kms_key_id                = var.kms_key_id
   preferred_subnet_id       = local.is_multi_az ? var.preferred_subnet_id : null
 
+  dynamic "read_cache_configuration" {
+    for_each = length(var.read_cache_configuration) > 0 ? [var.read_cache_configuration] : []
+
+    content {
+      size        = try(read_cache_configuration.value.size, null)
+      sizing_mode = try(read_cache_configuration.value.sizing_mode, null)
+    }
+  }
+
   dynamic "root_volume_configuration" {
     for_each = length(var.root_volume_configuration) > 0 ? [var.root_volume_configuration] : []
 
