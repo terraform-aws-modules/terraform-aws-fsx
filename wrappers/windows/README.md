@@ -70,9 +70,9 @@ module "wrapper" {
 
 ```hcl
 terraform {
-  source = "tfr:///terraform-aws-modules/s3-bucket/aws//wrappers"
+  source = "tfr:///terraform-aws-modules/fsx/aws//wrappers/windows"
   # Alternative source:
-  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-s3-bucket.git//wrappers?ref=master"
+  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-fsx.git//wrappers/windows?ref=master"
 }
 
 inputs = {

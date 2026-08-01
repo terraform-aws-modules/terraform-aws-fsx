@@ -21,20 +21,20 @@ Note that this example may create resources which will incur monetary charges on
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.100 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.100 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_fsx_lustre_disabled"></a> [fsx\_lustre\_disabled](#module\_fsx\_lustre\_disabled) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_intelligent_tiering"></a> [fsx\_lustre\_intelligent\_tiering](#module\_fsx\_lustre\_intelligent\_tiering) | ../../modules/lustre | n/a |
 | <a name="module_fsx_lustre_persistent_1"></a> [fsx\_lustre\_persistent\_1](#module\_fsx\_lustre\_persistent\_1) | ../../modules/lustre | n/a |
@@ -45,7 +45,7 @@ Note that this example may create resources which will incur monetary charges on
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
@@ -55,7 +55,7 @@ No inputs.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_persistent_1_backup_arn"></a> [persistent\_1\_backup\_arn](#output\_persistent\_1\_backup\_arn) | Amazon Resource Name of the backup |
 | <a name="output_persistent_1_backup_id"></a> [persistent\_1\_backup\_id](#output\_persistent\_1\_backup\_id) | Identifier of the backup |
 | <a name="output_persistent_1_cloudwatch_log_group_arn"></a> [persistent\_1\_cloudwatch\_log\_group\_arn](#output\_persistent\_1\_cloudwatch\_log\_group\_arn) | Arn of cloudwatch log group created |
